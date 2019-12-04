@@ -16,10 +16,27 @@
 
 */
 import React, { Component } from "react";
+import { withRouter } from 'react-router-dom';
+import  {FiLogOut}  from "react-icons/fi";
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { NavItem, Nav, NavDropdown, MenuItem } from "react-bootstrap";
+import * as action from '../../actions/login';
 
 class AdminNavbarLinks extends Component {
+  constructor(props) {
+    super(props);
+    const {stateLogins, fetchCurrent} = this.props;
+    fetchCurrent();
+  if(stateLogins.user===null) {
+    const {history} = this.props;
+          
+    history.push('/login');
+  }
+  }
   render() {
+
+
     const notification = (
       <div>
         <i className="fa fa-globe" />
@@ -69,7 +86,7 @@ class AdminNavbarLinks extends Component {
             <MenuItem divider />
             <MenuItem eventKey={2.5}>Separated link</MenuItem>
           </NavDropdown>
-          <NavItem eventKey={3} href="#">
+          <NavItem eventKey={3} href="/logout">
             Log out
           </NavItem>
         </Nav>
@@ -78,4 +95,17 @@ class AdminNavbarLinks extends Component {
   }
 }
 
-export default AdminNavbarLinks;
+const mapStateToProps = (state) =>{
+return {
+  stateLogins: state.login
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchCurrent: bindActionCreators(action.fetchCurrentUser,dispatch)
+  }
+}
+
+export default  connect(mapStateToProps, mapDispatchToProps)(withRouter(AdminNavbarLinks));
+
