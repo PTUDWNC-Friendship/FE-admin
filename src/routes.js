@@ -2,6 +2,7 @@
 import Dashboard from "views/Dashboard.jsx";
 import User from "views/Users/User";
 import TagList from "views/Tags";
+import SubjectList from "views/Subjects";
 // import UserProfile from "views/UserProfile.jsx";
 // import TableList from "views/TableList.jsx";
 import Typography from "views/Typography.jsx";
@@ -27,9 +28,9 @@ const dashboardRoutes = [
   },
   {
     path: "/subject",
-    name: "Subject (DEVELOPMENT)",
+    name: "Subject",
     icon: "pe-7s-study",
-    component: null,
+    component: SubjectList,
     layout: "/admin"
   },
   {
