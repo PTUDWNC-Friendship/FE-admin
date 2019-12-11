@@ -1,21 +1,6 @@
-/*!
 
-=========================================================
-* Light Bootstrap Dashboard React - v1.3.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/light-bootstrap-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/light-bootstrap-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import Dashboard from "views/Dashboard.jsx";
+import User from "views/Users/User";
 import UserProfile from "views/UserProfile.jsx";
 import TableList from "views/TableList.jsx";
 import Typography from "views/Typography.jsx";
@@ -36,35 +21,35 @@ const dashboardRoutes = [
     path: "/user",
     name: "User",
     icon: "pe-7s-users",
-    component: TableList,
+    component: User,
     layout: "/admin"
   },
   {
     path: "/subject",
     name: "Subject",
     icon: "pe-7s-study",
-    component: TableList,
+    component: null,
     layout: "/admin"
   },
   {
     path: "/contract",
     name: "Contract",
     icon: "pe-7s-note2",
-    component: TableList,
+    component: null,
     layout: "/admin"
   },
   {
     path: "/tag",
     name: "Tags",
     icon: "pe-7s-ticket",
-    component: TableList,
+    component: null,
     layout: "/admin"
   },
   {
     path: "/feedback",
     name: "Feedback",
     icon: "pe-7s-smile",
-    component: TableList,
+    component: null,
     layout: "/admin"
   },
   //==============================================

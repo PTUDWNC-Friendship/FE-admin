@@ -27,6 +27,13 @@ function getAllTutors(allTutors) {
   };
 }
 
+function getAllStudents(allStudents) {
+  return {
+    type: types.GET_ALL_STUDENTS,
+    allStudents
+  };
+}
+
 
 export function login(username, password) {
   return function(dispatch) {
@@ -87,7 +94,20 @@ export function fetchAllTutors() {
         dispatch(getAllTutors(users));
       })
       .catch((error) => {
-        dispatch(getCurrentUser(null));
+        dispatch(getAllTutors(null));
+      });
+  };
+}
+
+export function fetchAllStudents() {
+  return function(dispatch) {
+    return fetch(`http://localhost:3000/user/get-all-students`)
+      .then(response => response.json() )
+      .then(users => {
+        dispatch(getAllStudents(users));
+      })
+      .catch((error) => {
+        dispatch(getAllStudents(null));
       });
   };
 }
