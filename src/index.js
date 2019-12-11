@@ -35,6 +35,7 @@ import AdminLayout from "layouts/Admin.jsx";
 import Login from "layouts/Login.jsx";
 import Logout from "layouts/Logout.jsx";
 import NotFound from "layouts/NotFound.jsx";
+import Home from "layouts/Home";
 
 const loggerMiddleware = createLogger();
 
@@ -44,7 +45,8 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-        <Route path="/" exact render={props => <AdminLayout {...props} />} />
+        <Route path="/" exact component={Home}></Route>
+        <Route path="/admin" render={props => <AdminLayout {...props} />} />
         <Route path="/login" component={Login} />
         <Route path="/logout" component={Logout} />
         <Route path="" component={NotFound} />

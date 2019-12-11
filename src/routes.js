@@ -34,18 +34,40 @@ const dashboardRoutes = [
   },
   {
     path: "/user",
-    name: "User Profile",
-    icon: "pe-7s-user",
-    component: UserProfile,
+    name: "User",
+    icon: "pe-7s-users",
+    component: TableList,
     layout: "/admin"
   },
   {
-    path: "/table",
-    name: "Table List",
+    path: "/subject",
+    name: "Subject",
+    icon: "pe-7s-study",
+    component: TableList,
+    layout: "/admin"
+  },
+  {
+    path: "/contract",
+    name: "Contract",
     icon: "pe-7s-note2",
     component: TableList,
     layout: "/admin"
   },
+  {
+    path: "/tag",
+    name: "Tags",
+    icon: "pe-7s-ticket",
+    component: TableList,
+    layout: "/admin"
+  },
+  {
+    path: "/feedback",
+    name: "Feedback",
+    icon: "pe-7s-smile",
+    component: TableList,
+    layout: "/admin"
+  },
+  //==============================================
   {
     path: "/typography",
     name: "Typography",

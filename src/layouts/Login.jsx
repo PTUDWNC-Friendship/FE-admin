@@ -73,10 +73,12 @@ class Login extends React.Component {
     this.state = {
       errorMessage: ""
     };
+  }
 
-    const { userState } = this.props;
+  componentDidMount() {
+    const { userState, history, authorizeUserAction } = this.props;
+    authorizeUserAction();
     if (userState.user !== null) {
-      const { history } = this.props;
       if (userState.user.role === "admin") {
         history.push("/");
       }
@@ -190,11 +192,7 @@ class Login extends React.Component {
                     Forgot password?
                   </Link>
                 </Grid>
-                {/* <Grid item>
-                  <Link href="/register-tutor" variant="body2">
-                    Don&apos;t have an account? Sign Up
-                  </Link>
-                </Grid> */}
+
               </Grid>
               <Box mt={5}>
                 <Copyright />

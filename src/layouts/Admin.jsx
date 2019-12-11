@@ -42,7 +42,9 @@ class Admin extends Component {
       fixedClasses: "dropdown show-dropdown open"
     };
   }
+
   handleNotificationClick = position => {
+    const { firstName, lastName } = this.props.userState.user;
     var color = Math.floor(Math.random() * 4 + 1);
     var level;
     switch (color) {
@@ -65,8 +67,7 @@ class Admin extends Component {
       title: <span data-notify="icon" className="pe-7s-gift" />,
       message: (
         <div>
-          Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
-          every web developer.
+          Hi <b>{`${firstName} ${lastName}`}</b>, welcome to <b>UBERFORTUTOR</b> Admin Page.
         </div>
       ),
       level: level,
@@ -74,6 +75,7 @@ class Admin extends Component {
       autoDismiss: 15
     });
   };
+
   getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
@@ -94,6 +96,7 @@ class Admin extends Component {
       }
     });
   };
+
   getBrandText = path => {
     for (let i = 0; i < routes.length; i++) {
       if (
@@ -106,15 +109,19 @@ class Admin extends Component {
     }
     return "Brand";
   };
+
   handleImageClick = image => {
     this.setState({ image: image });
   };
+
   handleColorClick = color => {
     this.setState({ color: color });
   };
+
   handleHasImage = hasImage => {
     this.setState({ hasImage: hasImage });
   };
+
   handleFixedClick = () => {
     if (this.state.fixedClasses === "dropdown") {
       this.setState({ fixedClasses: "dropdown show-dropdown open" });
@@ -155,8 +162,7 @@ class Admin extends Component {
       title: <span data-notify="icon" className="pe-7s-gift" />,
       message: (
         <div>
-          Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
-          every web developer.
+          Hi <b>{userState.user !== null ? `${userState.user.firstName} ${userState.user.lastName}` : ''}</b>, welcome to <b>UBERFORTUTOR</b> Admin Page.
         </div>
       ),
       level: level,
