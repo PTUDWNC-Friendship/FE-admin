@@ -1,31 +1,26 @@
 import React, { Component } from "react";
 import { Grid, Row, Col, Table } from "react-bootstrap";
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 import Card from "components/Card/Card.jsx";
-import { fetchAllStudents } from '../../actions/user';
+import { fetchAllTags } from "../actions/user";
 
-class StudentList extends Component {
-
-componentDidMount() {
-    this.props.fetAllStudentsAction();
-}
+class TagList extends Component {
+  componentDidMount() {
+    this.props.fetchAllTagsAction();
+  }
 
   render() {
-    const students = this.props.userState.allStudents;
-    // const { user } = this.props.userState;
-    const thArray = [
-        "_id","username","firstName","lastName","gender","address","phone","type","role","bio","imageURL","status"
-    ];
-
+    const tags = this.props.tagState.allTags;
+    const thArray = ["_id", "name"];
     return (
       <div className="content">
         <Grid fluid>
           <Row>
             <Col md={12}>
               <Card
-                title="Students"
+                title="Tags"
                 category="Description"
                 ctTableFullWidth
                 ctTableResponsive
@@ -39,11 +34,11 @@ componentDidMount() {
                       </tr>
                     </thead>
                     <tbody>
-                      {students.map((student, key) => {
+                      {tags.map((tag, key) => {
                         return (
                           <tr key={key}>
                             {thArray.map((prop, key) => {
-                              return <td key={key}>{student[prop]}</td>;
+                              return <td key={key}>{tag[prop]}</td>;
                             })}
                           </tr>
                         );
@@ -61,19 +56,18 @@ componentDidMount() {
 }
 
 const mapStateToProps = state => {
-    return {
-      userState: state.userState
-    };
+  return {
+    tagState: state.tagState
   };
-  
-  const mapDispatchToProps = dispatch => {
-    return {
-      fetAllStudentsAction: () => dispatch(fetchAllStudents())
-    };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchAllTagsAction: () => dispatch(fetchAllTags())
   };
-  
-  export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(withRouter(StudentList));
-  
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(TagList));

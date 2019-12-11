@@ -1,8 +1,9 @@
 
 import Dashboard from "views/Dashboard.jsx";
 import User from "views/Users/User";
-import UserProfile from "views/UserProfile.jsx";
-import TableList from "views/TableList.jsx";
+import TagList from "views/Tags";
+// import UserProfile from "views/UserProfile.jsx";
+// import TableList from "views/TableList.jsx";
 import Typography from "views/Typography.jsx";
 import Icons from "views/Icons.jsx";
 import Maps from "views/Maps.jsx";
@@ -26,14 +27,14 @@ const dashboardRoutes = [
   },
   {
     path: "/subject",
-    name: "Subject",
+    name: "Subject (DEVELOPMENT)",
     icon: "pe-7s-study",
     component: null,
     layout: "/admin"
   },
   {
     path: "/contract",
-    name: "Contract",
+    name: "Contract (DEVELOPMENT)",
     icon: "pe-7s-note2",
     component: null,
     layout: "/admin"
@@ -42,12 +43,12 @@ const dashboardRoutes = [
     path: "/tag",
     name: "Tags",
     icon: "pe-7s-ticket",
-    component: null,
+    component: TagList,
     layout: "/admin"
   },
   {
     path: "/feedback",
-    name: "Feedback",
+    name: "Feedback (DEVELOPMENT)",
     icon: "pe-7s-smile",
     component: null,
     layout: "/admin"

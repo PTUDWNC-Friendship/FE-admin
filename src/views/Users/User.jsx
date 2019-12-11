@@ -16,7 +16,7 @@
 
 */
 import React, { Component } from "react";
-import { Grid, Row, Col, Table } from "react-bootstrap";
+import { Grid, Row, Col } from "react-bootstrap";
 
 import StudentList from "./Students";
 import TutorList from "./Tutors";

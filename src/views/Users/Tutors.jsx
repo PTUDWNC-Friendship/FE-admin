@@ -13,8 +13,10 @@ class TutorList extends Component {
 
   render() {
     const tutors = this.props.userState.allTutors;
-    const { user } = this.props.userState;
-    const thArray = user !== null ? Object.keys(user) : [];
+    // const { user } = this.props.userState;
+    const thArray = [
+        "_id","username","firstName","lastName","gender","address","phone","type","role","bio","imageURL","status"
+    ];
     return (
       <div className="content">
         <Grid fluid>
