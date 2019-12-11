@@ -16,27 +16,24 @@
 
 */
 import React, { Component } from "react";
-import { withRouter } from 'react-router-dom';
-import  {FiLogOut}  from "react-icons/fi";
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
+import { withRouter } from "react-router-dom";
+import { FiLogOut } from "react-icons/fi";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { NavItem, Nav, NavDropdown, MenuItem } from "react-bootstrap";
-import * as action from '../../actions/login';
+import * as action from "../../actions/user";
 
 class AdminNavbarLinks extends Component {
   constructor(props) {
     super(props);
-    const {stateLogins, fetchCurrent} = this.props;
-    fetchCurrent();
-  if(stateLogins.user===null) {
-    const {history} = this.props;
-          
-    history.push('/login');
-  }
+    const { userState, authorizeUserAction } = this.props;
+    authorizeUserAction();
+    if (userState.user === null) {
+      const { history } = this.props;
+      history.push("/admin/login");
+    }
   }
   render() {
-
-
     const notification = (
       <div>
         <i className="fa fa-globe" />
@@ -95,17 +92,19 @@ class AdminNavbarLinks extends Component {
   }
 }
 
-const mapStateToProps = (state) =>{
-return {
-  stateLogins: state.login
-  }
+const mapStateToProps = state => {
+  return {
+    userState: state.userState
+  };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    fetchCurrent: bindActionCreators(action.fetchCurrentUser,dispatch)
-  }
-}
+    authorizeUserAction: bindActionCreators(action.authorizeUser, dispatch)
+  };
+};
 
-export default  connect(mapStateToProps, mapDispatchToProps)(withRouter(AdminNavbarLinks));
-
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(AdminNavbarLinks));

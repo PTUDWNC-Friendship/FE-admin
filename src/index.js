@@ -17,11 +17,11 @@
 */
 import React from "react";
 import ReactDOM from "react-dom";
-import { createStore,applyMiddleware } from 'redux';
-import { createLogger } from 'redux-logger';
-import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import  myReducer  from './reducers/index';
+import { createStore, applyMiddleware } from "redux";
+import { createLogger } from "redux-logger";
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+import myReducer from "./reducers/index";
 
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
@@ -32,28 +32,16 @@ import "./assets/css/demo.css";
 import "./assets/css/pe-icon-7-stroke.css";
 
 import AdminLayout from "layouts/Admin.jsx";
-import Login from "views/Login";
-import Logout from "components/Logout/Logout";
 
-const loggerMiddleware = createLogger()
+const loggerMiddleware = createLogger();
 
-const store = createStore(
-  myReducer,
-  applyMiddleware(
-    thunk, // lets us dispatch() functions
-    loggerMiddleware // neat middleware that logs actions
-  )
-);
+const store = createStore(myReducer, applyMiddleware(thunk, loggerMiddleware));
 
-ReactDOM.render(<Provider store={store}>
+ReactDOM.render(
+  <Provider store={store}>
     <BrowserRouter>
-    <Switch>
-      <Route path="/admin" render={props => <AdminLayout {...props} />} />
-      <Route path="/login" render={props => <Login {...props} />} />
-      <Route path="/logout" render={props => <Logout {...props} />} />
-      <Redirect from="/" to="/admin/dashboard" />
-    </Switch>
-  </BrowserRouter>
-</Provider>,
+      <Route to="/" exact="true" render={props => <AdminLayout {...props} />}/>
+    </BrowserRouter>
+  </Provider>,
   document.getElementById("root")
 );
