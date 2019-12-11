@@ -16,8 +16,10 @@
 
 */
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 import NotificationSystem from "react-notification-system";
+import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
 
 import AdminNavbar from "components/Navbars/AdminNavbar";
 import Footer from "components/Footer/Footer";
@@ -25,10 +27,9 @@ import Sidebar from "components/Sidebar/Sidebar";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.jsx";
 
 import { style } from "variables/Variables.jsx";
-
 import routes from "routes.js";
-
 import image from "assets/img/sidebar-3.jpg";
+import { authorizeUser } from '../actions/user';
 
 class Admin extends Component {
   constructor(props) {
@@ -41,7 +42,9 @@ class Admin extends Component {
       fixedClasses: "dropdown show-dropdown open"
     };
   }
+
   handleNotificationClick = position => {
+    const { firstName, lastName } = this.props.userState.user;
     var color = Math.floor(Math.random() * 4 + 1);
     var level;
     switch (color) {
@@ -64,8 +67,7 @@ class Admin extends Component {
       title: <span data-notify="icon" className="pe-7s-gift" />,
       message: (
         <div>
-          Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
-          every web developer.
+          Hi <b>{`${firstName} ${lastName}`}</b>, welcome to <b>UBERFORTUTOR</b> Admin Page.
         </div>
       ),
       level: level,
@@ -73,6 +75,7 @@ class Admin extends Component {
       autoDismiss: 15
     });
   };
+
   getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.layout === "/admin") {
@@ -93,6 +96,7 @@ class Admin extends Component {
       }
     });
   };
+
   getBrandText = path => {
     for (let i = 0; i < routes.length; i++) {
       if (
@@ -105,15 +109,19 @@ class Admin extends Component {
     }
     return "Brand";
   };
+
   handleImageClick = image => {
     this.setState({ image: image });
   };
+
   handleColorClick = color => {
     this.setState({ color: color });
   };
+
   handleHasImage = hasImage => {
     this.setState({ hasImage: hasImage });
   };
+
   handleFixedClick = () => {
     if (this.state.fixedClasses === "dropdown") {
       this.setState({ fixedClasses: "dropdown show-dropdown open" });
@@ -121,7 +129,15 @@ class Admin extends Component {
       this.setState({ fixedClasses: "dropdown" });
     }
   };
+
   componentDidMount() {
+    const { userState, authorizeUserAction } = this.props;
+    authorizeUserAction();
+    if (userState.user === null) {
+      const { history } = this.props;
+      history.push("/login");
+    }
+
     this.setState({ _notificationSystem: this.refs.notificationSystem });
     var _notificationSystem = this.refs.notificationSystem;
     var color = Math.floor(Math.random() * 4 + 1);
@@ -146,8 +162,7 @@ class Admin extends Component {
       title: <span data-notify="icon" className="pe-7s-gift" />,
       message: (
         <div>
-          Welcome to <b>Light Bootstrap Dashboard</b> - a beautiful freebie for
-          every web developer.
+          Hi <b>{userState.user !== null ? `${userState.user.firstName} ${userState.user.lastName}` : ''}</b>, welcome to <b>UBERFORTUTOR</b> Admin Page.
         </div>
       ),
       level: level,
@@ -155,6 +170,7 @@ class Admin extends Component {
       autoDismiss: 15
     });
   }
+
   componentDidUpdate(e) {
     if (
       window.innerWidth < 993 &&
@@ -199,4 +215,20 @@ class Admin extends Component {
   }
 }
 
-export default Admin;
+const mapStateToProps = state => {
+  return {
+    userState: state.userState
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authorizeUserAction: bindActionCreators(authorizeUser, dispatch)
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Admin));
+

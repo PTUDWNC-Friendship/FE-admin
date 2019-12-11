@@ -3,7 +3,7 @@ import { Redirect } from 'react-router';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as action from '../../actions/login';
+import * as action from '../actions/user';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Logout extends React.Component {
@@ -33,7 +33,7 @@ const mapStateToProps = (state) =>{
 const mapDispatchToProps = (dispatch) => 
 bindActionCreators(
   {
-    logOut: action.logOut
+    logOut: action.logout
   },
   dispatch
 );
