@@ -19,8 +19,6 @@ import Dashboard from "views/Dashboard.jsx";
 import UserProfile from "views/UserProfile.jsx";
 import TableList from "views/TableList.jsx";
 import Typography from "views/Typography.jsx";
-import Login from "views/Login.jsx";
-import Logout from "views/Logout.jsx";
 import Icons from "views/Icons.jsx";
 import Maps from "views/Maps.jsx";
 import Notifications from "views/Notifications.jsx";
@@ -39,20 +37,6 @@ const dashboardRoutes = [
     name: "User Profile",
     icon: "pe-7s-user",
     component: UserProfile,
-    layout: "/admin"
-  },
-  {
-    path: "/login",
-    name: "Login",
-    icon: "pe-7s-user",
-    component: Login,
-    layout: "/admin"
-  },
-  {
-    path: "/logout",
-    name: "Logout",
-    icon: "pe-7s-user",
-    component: Login,
     layout: "/admin"
   },
   {

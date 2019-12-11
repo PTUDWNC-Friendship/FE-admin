@@ -17,22 +17,14 @@
 */
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { FiLogOut } from "react-icons/fi";
+// import { FiLogOut } from "react-icons/fi";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { NavItem, Nav, NavDropdown, MenuItem } from "react-bootstrap";
 import * as action from "../../actions/user";
 
 class AdminNavbarLinks extends Component {
-  constructor(props) {
-    super(props);
-    const { userState, authorizeUserAction } = this.props;
-    authorizeUserAction();
-    if (userState.user === null) {
-      const { history } = this.props;
-      history.push("/admin/login");
-    }
-  }
+
   render() {
     const notification = (
       <div>

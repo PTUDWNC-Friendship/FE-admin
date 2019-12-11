@@ -16,8 +16,10 @@
 
 */
 import React, { Component } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 import NotificationSystem from "react-notification-system";
+import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
 
 import AdminNavbar from "components/Navbars/AdminNavbar";
 import Footer from "components/Footer/Footer";
@@ -27,6 +29,7 @@ import FixedPlugin from "components/FixedPlugin/FixedPlugin.jsx";
 import { style } from "variables/Variables.jsx";
 import routes from "routes.js";
 import image from "assets/img/sidebar-3.jpg";
+import { authorizeUser } from '../actions/user';
 
 class Admin extends Component {
   constructor(props) {
@@ -119,7 +122,15 @@ class Admin extends Component {
       this.setState({ fixedClasses: "dropdown" });
     }
   };
+
   componentDidMount() {
+    const { userState, authorizeUserAction } = this.props;
+    authorizeUserAction();
+    if (userState.user === null) {
+      const { history } = this.props;
+      history.push("/login");
+    }
+
     this.setState({ _notificationSystem: this.refs.notificationSystem });
     var _notificationSystem = this.refs.notificationSystem;
     var color = Math.floor(Math.random() * 4 + 1);
@@ -153,6 +164,7 @@ class Admin extends Component {
       autoDismiss: 15
     });
   }
+
   componentDidUpdate(e) {
     if (
       window.innerWidth < 993 &&
@@ -197,4 +209,20 @@ class Admin extends Component {
   }
 }
 
-export default Admin;
+const mapStateToProps = state => {
+  return {
+    userState: state.userState
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    authorizeUserAction: bindActionCreators(authorizeUser, dispatch)
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Admin));
+

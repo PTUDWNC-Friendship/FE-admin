@@ -1,64 +1,64 @@
-import React from 'react';
-import { withRouter } from 'react-router-dom';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Paper from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import $ from 'jquery';
-import { login, authorizeUser } from '../actions/user';
+import React from "react";
+import { withRouter } from "react-router-dom";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import Link from "@material-ui/core/Link";
+import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import $ from "jquery";
+import { login, authorizeUser } from "../actions/user";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
+      {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
         Friendship
-      </Link>{' '}
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
 
 const styles = theme => ({
   root: {
-    paddingTop: '10vh',
-    height: '100vh'
+    paddingTop: "10vh",
+    height: "100vh"
   },
   image: {
     backgroundImage:
-      'url(https://source.unsplash.com/featured/?programming,education)',
-    backgroundRepeat: 'no-repeat',
+      "url(https://source.unsplash.com/featured/?programming,education)",
+    backgroundRepeat: "no-repeat",
     backgroundColor:
-      theme.palette.type === 'dark'
+      theme.palette.type === "dark"
         ? theme.palette.grey[900]
         : theme.palette.grey[50],
-    backgroundSize: 'cover',
-    backgroundPosition: 'center'
+    backgroundSize: "cover",
+    backgroundPosition: "center"
   },
   paper: {
     margin: theme.spacing(8, 4),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center"
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1)
   },
   submit: {
@@ -69,20 +69,28 @@ const styles = theme => ({
 class Login extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      errorMessage: ""
+    };
+
     const { userState } = this.props;
     if (userState.user !== null) {
       const { history } = this.props;
-      if (userState.user.role === 'tutor') {
-        history.push('/home-tutor');
-      }
-      if (userState.user.role === 'student') {
-        history.push('/home-student');
+      if (userState.user.role === "admin") {
+        history.push("/");
       }
     }
   }
 
+  setErrorMessage = message => {
+    this.setState({
+      errorMessage: message
+    });
+  };
+
   handleSubmit = e => {
-    $('#idLoading').show();
+    $("#idLoading").show();
     e.preventDefault();
     const { loginAction } = this.props;
     Promise.resolve(
@@ -91,29 +99,23 @@ class Login extends React.Component {
       const { userState } = this.props;
       if (userState.isFetching === false) {
         if (userState.user === null) {
-          $('#errorMsg').show();
-          $('#idLoading').hide();
+          $("#errorMsg").show();
+          this.setErrorMessage("Incorrect username or password!");
         } else {
           const { history } = this.props;
-          if (userState.user.role === null) {
-            history.push('/roles');
-            $('#idLoading').hide();
+          if (userState.user.role === "admin") {
+            history.push("/");
           } else {
-            if (userState.user.role === 'tutor') {
-              history.push('/home-tutor');
-            }
-            if (userState.user.role === 'student') {
-              history.push('/home-student');
-            }
-            $('#idLoading').hide();
+            $("#errorMsg").show();
+            this.setErrorMessage("Please login by admin account!");
           }
         }
       }
+      $("#idLoading").hide();
     });
   };
 
   render() {
-
     const { classes } = this.props;
     return (
       <Grid container component="main" className={classes.root}>
@@ -158,6 +160,20 @@ class Login extends React.Component {
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
+              <div
+                className="error"
+                id="errorMsg"
+                style={{ display: "none", color: "red", textAlign: "center" }}
+              >
+                {this.state.errorMessage}
+              </div>
+              <div className="d-flex justify-content-center">
+                <div
+                  id="idLoading"
+                  style={{ display: "none" }}
+                  className="spinner-border text-success"
+                />
+              </div>
               <Button
                 type="submit"
                 fullWidth
@@ -168,36 +184,22 @@ class Login extends React.Component {
                 Sign In
               </Button>
 
-              <Grid container style={{ height: '80px' }}>
+              <Grid container style={{ height: "80px" }}>
                 <Grid item xs>
                   <Link href="/" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>
-                <Grid item>
+                {/* <Grid item>
                   <Link href="/register-tutor" variant="body2">
                     Don&apos;t have an account? Sign Up
                   </Link>
-                </Grid>
+                </Grid> */}
               </Grid>
               <Box mt={5}>
                 <Copyright />
               </Box>
             </form>
-            <div
-              className="error"
-              id="errorMsg"
-              style={{ display: 'none', color: 'red', textAlign: 'center' }}
-            >
-              Incorrect email or password, please check again!
-            </div>
-            <div className="d-flex justify-content-center">
-              <div
-                id="idLoading"
-                style={{ display: 'none' }}
-                className="spinner-border text-success"
-              />
-            </div>
           </div>
         </Grid>
       </Grid>
