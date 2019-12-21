@@ -1,5 +1,5 @@
 import fetch from 'cross-fetch';
-import * as types from '../helpers/index';
+import * as types from '../helpers/action-type';
 import { SERVER_URL } from '../helpers/constant';
 
 function requestLogin() {
@@ -21,12 +21,20 @@ function getCurrentUser(user) {
   };
 }
 
+function getCurrentTutor(tutor) {
+  return {
+    type: types.GET_CURRENT_TUTOR,
+    tutor
+  };
+}
+
 function getAllTutors(allTutors) {
   return {
     type: types.GET_ALL_TUTORS,
     allTutors
   };
 }
+
 
 function getAllStudents(allStudents) {
   return {
@@ -35,10 +43,16 @@ function getAllStudents(allStudents) {
   };
 }
 
-function getAllTags(allTags) {
+function addSubject() {
   return {
-    type: types.GET_ALL_TAGS,
-    allTags
+    type: types.INSERT_TUTOR_SUBJECT,
+  };
+}
+
+
+function removeSubject() {
+  return {
+    type: types.DELETE_TUTOR_SUBJECT
   };
 }
 
@@ -102,7 +116,7 @@ export function fetchAllTutors() {
         dispatch(getAllTutors(users));
       })
       .catch((error) => {
-        dispatch(getAllTutors(null));
+        dispatch(getCurrentUser(null));
       });
   };
 }
@@ -115,26 +129,39 @@ export function fetchAllStudents() {
         dispatch(getAllStudents(users));
       })
       .catch((error) => {
-        dispatch(getAllStudents(null));
+        dispatch(getCurrentUser(null));
       });
   };
 }
 
-export function fetchAllTags() {
+export function fetchUserById(id) {
   return function(dispatch) {
-    return fetch(`${SERVER_URL}/tag/api`)
+    return fetch(`${SERVER_URL}/user/api/${id}`)
       .then(response => response.json() )
-      .then(tags => {
-        dispatch(getAllTags(tags));
+      .then(user => {
+        if (user.role === 'tutor') {
+          if (user.subjects !== null) {
+            fetch(`${SERVER_URL}/user/tutor/${id}/subjects`)
+              .then(response => response.json())
+              .then(subjects => {
+                user.subjects = subjects;
+                dispatch(getCurrentTutor(user));
+              });
+          }
+        } else {
+          dispatch(getCurrentUser(user));
+        }
       })
       .catch((error) => {
-        dispatch(getAllTags(null));
+        console.log(error);
+        dispatch(getCurrentUser(null));
       });
   };
 }
 
 export function updateUser(user) {
   return function(dispatch) {
+    console.log(user);
     dispatch(requestLogin());
     return fetch(`${SERVER_URL}/user/update`, {
       method: 'POST',
@@ -147,13 +174,10 @@ export function updateUser(user) {
     })
       .then(response => response.json() )
       .then(data => {
-      console.log("TCL: updateUser -> data", data);
         dispatch(getCurrentUser(data));
         dispatch(receiveLogin());
       })
       .catch((error) => {
-      console.log("TCL: updateUser -> error", error);
-        
         dispatch(getCurrentUser(null));
       });
   };
@@ -171,17 +195,69 @@ export function updateTutor(tutor) {
         'Content-type': 'application/json; charset=UTF-8'
       }
     })
-      .then(response => response.json() )
+      .then(response => response.json())
       .then(data => {
-      console.log("TCL: updateUser -> data", data);
         dispatch(getCurrentUser(data));
         dispatch(receiveLogin());
       })
       .catch((error) => {
-      console.log("TCL: updateUser -> error", error);
-        
         dispatch(getCurrentUser(null));
       });
+  };
+}
+
+export function insertTutorSubject(_id, _idSubject) {
+  return function(dispatch) {
+    dispatch(requestLogin());
+    return fetch(`${SERVER_URL}/user/tutor/insert/subject`, {
+      method: 'POST',
+      body: JSON.stringify({
+        _id,
+        _idSubject
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        dispatch(addSubject());
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+}
+
+export function deleteTutorSubject(_id, _idSubject) {
+  return function(dispatch) {
+    dispatch(requestLogin());
+    return fetch(`${SERVER_URL}/user/tutor/delete/subject`, {
+      method: 'POST',
+      body: JSON.stringify({
+        _id,
+        _idSubject
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        dispatch(removeSubject());
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+}
+
+export function loginGoogle(user) {
+  return function(dispatch) {
+    if (user) {
+      localStorage.setItem('authToken', user.token);
+      dispatch(getCurrentUser(user));
+    }
   };
 }
 

@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 import userState from './user';
-import tagState from './tag';
 import subjectState from './subject';
+import contractState from './contract';
 
 const myReducer = combineReducers ({
-    userState, tagState, subjectState
+    userState,
+    subjectState,
+    contractState
 });
 export default myReducer;

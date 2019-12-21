@@ -1,4 +1,4 @@
-import * as types from "../helpers/index";
+import * as types from '../helpers/action-type';
 
 const initialState = {
   isFetching: false,
@@ -6,7 +6,9 @@ const initialState = {
   didInvalidate: false,
   isLogin: false,
   allTutors: [],
-  allStudents: []
+  allStudents: [],
+  tutor: null,
+  student: null
 };
 
 const userState = (state = initialState, action) => {
@@ -17,10 +19,17 @@ const userState = (state = initialState, action) => {
       return { ...state, isFetching: false };
     case types.GET_CURRENT_USER:
       return { ...state, isFetching: false, isLogin: true, user: action.user };
+    case types.GET_CURRENT_TUTOR:
+      return { ...state, tutor: action.tutor };
     case types.GET_ALL_TUTORS:
       return { ...state, allTutors: action.allTutors };
     case types.GET_ALL_STUDENTS:
       return { ...state, allStudents: action.allStudents };
+
+    case types.INSERT_TUTOR_SUBJECT:
+      return state;
+    case types.DELETE_TUTOR_SUBJECT:
+      return state;
     default:
       return state;
   }

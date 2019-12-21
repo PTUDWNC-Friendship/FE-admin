@@ -1,7 +1,6 @@
 
 import Dashboard from "views/Dashboard.jsx";
 import User from "views/Users/User";
-import TagList from "views/Tags";
 import SubjectList from "views/Subjects";
 // import UserProfile from "views/UserProfile.jsx";
 // import TableList from "views/TableList.jsx";
@@ -40,13 +39,13 @@ const dashboardRoutes = [
     component: null,
     layout: "/admin"
   },
-  {
-    path: "/tag",
-    name: "Tags",
-    icon: "pe-7s-ticket",
-    component: TagList,
-    layout: "/admin"
-  },
+  // {
+  //   path: "/tag",
+  //   name: "Tags",
+  //   icon: "pe-7s-ticket",
+  //   component: TagList,
+  //   layout: "/admin"
+  // },
   {
     path: "/feedback",
     name: "Feedback (DEVELOPMENT)",
@@ -82,15 +81,15 @@ const dashboardRoutes = [
     icon: "pe-7s-bell",
     component: Notifications,
     layout: "/admin"
-  },
-  {
-    upgrade: true,
-    path: "/upgrade",
-    name: "Upgrade to PRO",
-    icon: "pe-7s-rocket",
-    component: Upgrade,
-    layout: "/admin"
   }
+  // {
+  //   upgrade: true,
+  //   path: "/upgrade",
+  //   name: "Upgrade to PRO",
+  //   icon: "pe-7s-rocket",
+  //   component: Upgrade,
+  //   layout: "/admin"
+  // }
 ];
 
 export default dashboardRoutes;
