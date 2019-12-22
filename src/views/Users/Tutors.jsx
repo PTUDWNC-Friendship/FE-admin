@@ -21,11 +21,11 @@ class TutorList extends Component {
       user = {
         ...value
       }
-      user.status = user.status==='inactive'?'active':'inactive'
+      user.status = user.status==='Inactive'?'Active':'Inactive'
     } else {
       user = {
         ...value,
-        status: 'inactive'
+        status: 'Inactive'
       }
     }
 
@@ -83,7 +83,7 @@ class TutorList extends Component {
                               return <td key={key}>{tutor[prop]}</td>;
                             })}
                             <td>
-                            {tutor.status==='inactive'?
+                            {tutor.status==='Inactive'?
                             <Fab title="Unlock user" onClick={()=>this.onChangeSatus(tutor)}  style={{backgroundColor: '#87CB16'}}  aria-label="like" >
                               <LockOpenIcon />
                             </Fab> :
@@ -103,6 +103,7 @@ class TutorList extends Component {
             </Col>
           </Row>
         </Grid>
+
       </div>
     );
   }

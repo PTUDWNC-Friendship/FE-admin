@@ -22,11 +22,11 @@ onChangeSatus(value) {
     user = {
       ...value
     }
-    user.status = user.status==='inactive'?'active':'inactive'
+    user.status = user.status==='Inactive'?'Active':'Inactive'
   } else {
     user = {
       ...value,
-      status: 'inactive'
+      status: 'Inactive'
     }
   }
 
@@ -86,7 +86,7 @@ onChangeSatus(value) {
                             })}
 
                              <td>
-                            {student.status==='inactive'?
+                            {student.status==='Inactive'?
                             <Fab title="Unlock user" onClick={()=>this.onChangeSatus(student)}  style={{backgroundColor: '#87CB16'}}  aria-label="like" >
                               <LockOpenIcon />
                             </Fab> :
