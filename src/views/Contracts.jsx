@@ -4,11 +4,32 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
 import Card from "components/Card/Card.jsx";
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import Fab from '@material-ui/core/Fab';
 import { fetchAllContracts } from "../actions/contract";
+import $ from 'jquery';
 
 class ContractList extends Component {
   componentDidMount() {
     this.props.fetchAllContractsAction();
+  }
+
+  onDetailContract(contract) {
+    console.log(contract);
+    $("#idDetail").html(contract._id);
+    $("#studentDetail").html(`${contract.student.firstName} ${contract.student.lastName}`);
+    $("#tutorDetail").html(`${contract.tutor.firstName} ${contract.tutor.lastName}`);
+    $("#subjectDetail").html(contract.subject.name);
+
+    $("#startDateDetail").html(contract.startDate);
+    $("#endDateDetail").html(contract.endDate);
+    $("#createdDateDetail").html(contract.createdDate);
+    $("#hoursNumberDetail").html(contract.hoursNumber);
+    $("#totalPriceDetail").html(contract.totalPrice);
+    $("#revenueDetail").html(contract.revenue);
+    $("#statusDetail").html(contract.message);
+    $("#messageDetail").html(contract.status);
+
   }
 
   render() {
@@ -43,7 +64,11 @@ class ContractList extends Component {
                             <td>{`${contract.student.firstName} ${contract.student.lastName}`}</td>
                             <td>{`${contract.tutor.firstName} ${contract.tutor.lastName}`}</td>
                             <td>{contract.subject.name}</td>
-                            <td><button className="btn btn-warning">Feedback</button></td>
+                            <td>
+                              <button className="btn btn-warning">
+                                Feedback
+                              </button>
+                            </td>
                             <td>{`${contract.startDate}
                                   ${contract.endDate}`}</td>
                             <td>{contract.createdDate}</td>
@@ -52,6 +77,18 @@ class ContractList extends Component {
                             <td>{contract.revenue}</td>
                             <td>{contract.message}</td>
                             <td>{contract.status}</td>
+                            <td>
+                              <Fab
+                                color="secondary"
+                                aria-label="add"
+                                data-toggle="modal"
+                                data-target="#myModalContract"
+                                onClick={() => this.onDetailContract(contract)}
+                              >
+                                <VisibilityIcon />
+                              </Fab>
+                            </td>
+                            <td></td>
                           </tr>
                         );
                       })}
@@ -62,6 +99,94 @@ class ContractList extends Component {
             </Col>
           </Row>
         </Grid>
+
+        <div id="myModalContract" className="modal fade" role="dialog">
+          <div className="modal-dialog modal-dialog-centered ">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h4 className="modal-title">Detail Contract</h4>
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-hidden="true"
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="container">
+                  <div className="row">
+                    <div className="col-4"><h4>ID</h4></div>
+                    <div className="col-8" id="#idDetail"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4"><h4>Student</h4></div>
+                    <div className="col-8" id="#studentDetail"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4"><h4>Tutor</h4></div>
+                    <div className="col-8" id="#tutorDetail"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4"><h4>Subject</h4></div>
+                    <div className="col-8" id="#subjectDetail"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4"><h4>Created Date</h4></div>
+                    <div className="col-8" id="#createdDateDetail"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4"><h4>Start Date</h4></div>
+                    <div className="col-8" id="#startDateDetail"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4"><h4>End Date</h4></div>
+                    <div className="col-8" id="#endDateDetail"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4"><h4>Hours</h4></div>
+                    <div className="col-8" id="#hoursNumberDetail"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4"><h4>Total Price</h4></div>
+                    <div className="col-8" id="#totalPriceDetail"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4"><h4>Revenue</h4></div>
+                    <div className="col-8" id="#revenueDetail"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4"><h4>Status</h4></div>
+                    <div className="col-8" id="#statusDetail"></div>
+                  </div>
+                  <div className="row">
+                    <div className="col-4"><h4>Message</h4></div>
+                    <div className="col-8" id="#messageDetail"></div>
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <input
+                  type="button"
+                  className="btn btn-warning"
+                  data-dismiss="modal"
+                  value="Cancel"
+                />
+                <input
+                  type="button"
+                  className="btn btn-primary"
+                  value="OK"
+                />
+                <input
+                  type="button"
+                  className="btn btn-danger"
+                  value="Dispute"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
