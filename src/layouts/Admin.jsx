@@ -170,7 +170,7 @@ class Admin extends Component {
   componentDidUpdate(e) {
 
     const { userState, authorizeUserAction } = this.props;
-    authorizeUserAction();
+
     if (userState.user === null) {
       const { history } = this.props;
       history.push("/login");
