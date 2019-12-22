@@ -133,10 +133,6 @@ class Admin extends Component {
   componentDidMount() {
     const { userState, authorizeUserAction } = this.props;
     authorizeUserAction();
-    if (userState.user === null) {
-      const { history } = this.props;
-      history.push("/login");
-    }
 
     this.setState({ _notificationSystem: this.refs.notificationSystem });
     var _notificationSystem = this.refs.notificationSystem;
@@ -172,6 +168,14 @@ class Admin extends Component {
   }
 
   componentDidUpdate(e) {
+
+    const { userState, authorizeUserAction } = this.props;
+    authorizeUserAction();
+    if (userState.user === null) {
+      const { history } = this.props;
+      history.push("/login");
+    }
+
     if (
       window.innerWidth < 993 &&
       e.history.location.pathname !== e.location.pathname &&
