@@ -85,6 +85,16 @@ class Login extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    const { userState, history, authorizeUserAction } = this.props;
+    authorizeUserAction();
+    if (userState.user !== null) {
+      if (userState.user.role === "admin") {
+        history.push("/");
+      }
+    }
+  }
+
   setErrorMessage = message => {
     this.setState({
       errorMessage: message

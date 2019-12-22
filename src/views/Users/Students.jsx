@@ -1,15 +1,54 @@
 import React, { Component } from "react";
 import { Grid, Row, Col, Table } from "react-bootstrap";
 import { connect } from 'react-redux';
+import Fab from '@material-ui/core/Fab';
 import { withRouter } from 'react-router-dom';
-
+import LockOpenIcon from '@material-ui/icons/LockOpen';
+import BlockIcon from '@material-ui/icons/Block';
 import Card from "components/Card/Card.jsx";
 import { fetchAllStudents } from '../../actions/user';
+import {SERVER_URL} from '../../helpers/constant';
 
 class StudentList extends Component {
 
 componentDidMount() {
     this.props.fetAllStudentsAction();
+}
+
+onChangeSatus(value) {
+
+  let user = null;
+  if(value.hasOwnProperty('status')) {
+    user = {
+      ...value
+    }
+    user.status = user.status==='Inactive'?'Active':'Inactive'
+  } else {
+    user = {
+      ...value,
+      status: 'Inactive'
+    }
+  }
+
+  fetch(`${SERVER_URL}/user/update`, {
+    method: 'POST',
+    body: JSON.stringify({
+        ...user
+    }),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8'
+    }
+  })
+    .then(response => response.json() )
+    .then(data => {
+        this.props.fetAllStudentsAction();
+
+
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+
 }
 
   render() {
@@ -45,6 +84,17 @@ componentDidMount() {
                             {thArray.map((prop, key) => {
                               return <td key={key}>{student[prop]}</td>;
                             })}
+
+                             <td>
+                            {student.status==='Inactive'?
+                            <Fab title="Unlock user" onClick={()=>this.onChangeSatus(student)}  style={{backgroundColor: '#87CB16'}}  aria-label="like" >
+                              <LockOpenIcon />
+                            </Fab> :
+                            <Fab title="Lock user" onClick={()=>this.onChangeSatus(student)} style={{backgroundColor: '#FF4A55'}}   aria-label="like" >
+                              <BlockIcon />
+                          </Fab>
+                            }
+                            </td>
                           </tr>
                         );
                       })}
