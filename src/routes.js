@@ -9,6 +9,7 @@ import Icons from "views/Icons.jsx";
 import Maps from "views/Maps.jsx";
 import Notifications from "views/Notifications.jsx";
 import Upgrade from "views/Upgrade.jsx";
+import Contracts from "views/Contracts";
 
 const dashboardRoutes = [
   {
@@ -34,9 +35,9 @@ const dashboardRoutes = [
   },
   {
     path: "/contract",
-    name: "Contract (DEVELOPMENT)",
+    name: "Contract",
     icon: "pe-7s-note2",
-    component: null,
+    component: Contracts,
     layout: "/admin"
   },
   // {

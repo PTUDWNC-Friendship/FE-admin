@@ -36,6 +36,47 @@ export function fetchAllContracts() {
   };
 }
 
+async function getDataContract(_idStudent, _idTutor, _idSubject, _idFeedback) {
+  var contract = {};
+  const resStudent = await fetch(`${SERVER_URL}/user/api/${_idStudent}`);
+          const student = await resStudent.json();
+          const resTutor = await fetch(`${SERVER_URL}/user/api/${_idTutor}`);
+          const tutor = await resTutor.json();
+          const resSubject = await fetch(`${SERVER_URL}/subject/api/${_idSubject}`);
+          const subject = await resSubject.json();
+
+          if (_idFeedback) {
+            const resFeedback = await fetch(`${SERVER_URL}/feedback/api/${_idFeedback}`);
+            const feedback = await resFeedback.json();
+            contract = { ...contract, feedback};
+          }   
+
+    return { ...contract, student, tutor, subject };
+}
+
+export function fetchAllDetailContracts() {
+  return function(dispatch) {
+    return fetch(`${SERVER_URL}/contract/api`)
+      .then(response => response.json())
+      .then(contracts => {
+        contracts.forEach(async contract => {
+          const { _idStudent, _idTutor, _idSubject, _idFeedback } = contract;
+          getDataContract(_idStudent, _idTutor, _idSubject, _idFeedback).then(data => {
+            console.log(data);
+            contract = { ...contract, ...data}
+          })
+          console.log(contract);
+        });
+        console.log(contracts);
+        dispatch(getAllContract(contracts));
+
+      }).catch(err => {
+        console.log(err);
+        dispatch(getAllContract(null));
+      }) 
+  };
+}
+
 export function fetchTutorContracts(id) {
   return function(dispatch) {
     return fetch(`${SERVER_URL}/contract/student/${id}`)
