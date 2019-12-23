@@ -16,19 +16,19 @@ class ContractList extends Component {
 
   onDetailContract(contract) {
     console.log(contract);
-    $("#idDetail").html(contract._id);
-    $("#studentDetail").html(`${contract.student.firstName} ${contract.student.lastName}`);
-    $("#tutorDetail").html(`${contract.tutor.firstName} ${contract.tutor.lastName}`);
-    $("#subjectDetail").html(contract.subject.name);
+    $("#idDetail").text(contract._id);
+    $("#studentDetail").text(`${contract.student.firstName} ${contract.student.lastName}`);
+    $("#tutorDetail").text(`${contract.tutor.firstName} ${contract.tutor.lastName}`);
+    $("#subjectDetail").text(contract.subject.name);
 
-    $("#startDateDetail").html(contract.startDate);
-    $("#endDateDetail").html(contract.endDate);
-    $("#createdDateDetail").html(contract.createdDate);
-    $("#hoursNumberDetail").html(contract.hoursNumber);
-    $("#totalPriceDetail").html(contract.totalPrice);
-    $("#revenueDetail").html(contract.revenue);
-    $("#statusDetail").html(contract.message);
-    $("#messageDetail").html(contract.status);
+    $("#startDateDetail").text(contract.startDate);
+    $("#endDateDetail").text(contract.endDate);
+    $("#createdDateDetail").text(contract.createdDate);
+    $("#hoursNumberDetail").text(contract.hoursNumber);
+    $("#totalPriceDetail").text(contract.totalPrice);
+    $("#revenueDetail").text(contract.revenue);
+    $("#statusDetail").text(contract.message);
+    $("#messageDetail").text(contract.status);
 
   }
 
@@ -118,51 +118,51 @@ class ContractList extends Component {
                 <div className="container">
                   <div className="row">
                     <div className="col-4"><h4>ID</h4></div>
-                    <div className="col-8" id="#idDetail"></div>
+                    <div className="col-8" id="idDetail"></div>
                   </div>
                   <div className="row">
                     <div className="col-4"><h4>Student</h4></div>
-                    <div className="col-8" id="#studentDetail"></div>
+                    <div className="col-8" id="studentDetail"></div>
                   </div>
                   <div className="row">
                     <div className="col-4"><h4>Tutor</h4></div>
-                    <div className="col-8" id="#tutorDetail"></div>
+                    <div className="col-8" id="tutorDetail"></div>
                   </div>
                   <div className="row">
                     <div className="col-4"><h4>Subject</h4></div>
-                    <div className="col-8" id="#subjectDetail"></div>
+                    <div className="col-8" id="subjectDetail"></div>
                   </div>
                   <div className="row">
                     <div className="col-4"><h4>Created Date</h4></div>
-                    <div className="col-8" id="#createdDateDetail"></div>
+                    <div className="col-8" id="createdDateDetail"></div>
                   </div>
                   <div className="row">
                     <div className="col-4"><h4>Start Date</h4></div>
-                    <div className="col-8" id="#startDateDetail"></div>
+                    <div className="col-8" id="startDateDetail"></div>
                   </div>
                   <div className="row">
                     <div className="col-4"><h4>End Date</h4></div>
-                    <div className="col-8" id="#endDateDetail"></div>
+                    <div className="col-8" id="endDateDetail"></div>
                   </div>
                   <div className="row">
                     <div className="col-4"><h4>Hours</h4></div>
-                    <div className="col-8" id="#hoursNumberDetail"></div>
+                    <div className="col-8" id="hoursNumberDetail"></div>
                   </div>
                   <div className="row">
                     <div className="col-4"><h4>Total Price</h4></div>
-                    <div className="col-8" id="#totalPriceDetail"></div>
+                    <div className="col-8" id="totalPriceDetail"></div>
                   </div>
                   <div className="row">
                     <div className="col-4"><h4>Revenue</h4></div>
-                    <div className="col-8" id="#revenueDetail"></div>
+                    <div className="col-8" id="revenueDetail"></div>
                   </div>
                   <div className="row">
                     <div className="col-4"><h4>Status</h4></div>
-                    <div className="col-8" id="#statusDetail"></div>
+                    <div className="col-8" id="statusDetail"></div>
                   </div>
                   <div className="row">
                     <div className="col-4"><h4>Message</h4></div>
-                    <div className="col-8" id="#messageDetail"></div>
+                    <div className="col-8" id="messageDetail"></div>
                   </div>
                 </div>
               </div>
