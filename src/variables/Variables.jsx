@@ -514,9 +514,8 @@ var dataSales = {
     "6:00AM"
   ],
   series: [
-    [287, 385, 490, 492, 554, 586, 698, 695],
-    [67, 152, 143, 240, 287, 335, 435, 437],
-    [23, 113, 67, 108, 190, 239, 307, 308]
+    [287, 385, 490, 492, 554, 586, 698, 695]
+
   ]
 };
 var optionsSales = {
@@ -548,8 +547,8 @@ var responsiveSales = [
   ]
 ];
 var legendSales = {
-  names: ["Open", "Click", "Click Second Time"],
-  types: ["info", "danger", "warning"]
+  names: ["Revenue"],
+  types: ["info"]
 };
 
 // Data for Bar Chart
@@ -569,8 +568,7 @@ var dataBar = {
     "Dec"
   ],
   series: [
-    [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895],
-    [412, 243, 280, 580, 453, 353, 300, 364, 368, 410, 636, 695]
+    [542, 443, 320, 780, 553, 453, 326, 434, 568, 610, 756, 895]
   ]
 };
 var optionsBar = {
@@ -594,8 +592,8 @@ var responsiveBar = [
   ]
 ];
 var legendBar = {
-  names: ["Tesla Model S", "BMW 5 Series"],
-  types: ["info", "danger"]
+  names: ["Revenue"],
+  types: [ "danger"]
 };
 
 module.exports = {

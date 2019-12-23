@@ -18,9 +18,11 @@
 import React, { Component } from "react";
 import ChartistGraph from "react-chartist";
 import { Grid, Row, Col } from "react-bootstrap";
-
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 import { Card } from "components/Card/Card.jsx";
 import { StatsCard } from "components/StatsCard/StatsCard.jsx";
+import { fetchAllContracts } from "../actions/contract";
 import { Tasks } from "components/Tasks/Tasks.jsx";
 import {
   dataPie,
@@ -36,6 +38,19 @@ import {
 } from "variables/Variables.jsx";
 
 class Dashboard extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataRevenueIn10Day: null,
+    }
+  }
+
+  componentWillMount() {
+    this.props.fetchAllContractsAction();
+  }
+
+
   createLegend(json) {
     var legend = [];
     for (var i = 0; i < json["names"].length; i++) {
@@ -47,11 +62,38 @@ class Dashboard extends Component {
     return legend;
   }
   render() {
+    var dataRevenue = {
+      labels: null,
+      series: [
+    
+      ]
+    }
+    let labelsRevenue = [];
+    let seriesRevenue = [];
+    let totalRevenue = 0;
+    const {allContracts} = this.props.contractState;
+    if(allContracts.length>0) {
+      let count = 0;
+      for(let i=0;i<allContracts.length;i++) {
+        if(allContracts[i].status==='confirmed') {
+          if(count<10) {
+            count+=1;
+            labelsRevenue.push(allContracts[i].createdDate);
+            seriesRevenue.push(allContracts[i].revenue);
+          }
+          totalRevenue+=allContracts[i].revenue;
+        }
+
+      }
+      dataRevenue.labels = labelsRevenue;
+      dataRevenue.series.push(seriesRevenue)
+    }
+    console.log(dataRevenue);
     return (
       <div className="content">
         <Grid fluid>
           <Row>
-            <Col lg={3} sm={6}>
+            {/* <Col lg={3} sm={6}>
               <StatsCard
                 bigIcon={<i className="pe-7s-server text-warning" />}
                 statsText="Capacity"
@@ -59,17 +101,17 @@ class Dashboard extends Component {
                 statsIcon={<i className="fa fa-refresh" />}
                 statsIconText="Updated now"
               />
-            </Col>
+            </Col> */}
             <Col lg={3} sm={6}>
               <StatsCard
                 bigIcon={<i className="pe-7s-wallet text-success" />}
                 statsText="Revenue"
-                statsValue="$1,345"
+                statsValue={'$'+totalRevenue}
                 statsIcon={<i className="fa fa-calendar-o" />}
                 statsIconText="Last day"
               />
             </Col>
-            <Col lg={3} sm={6}>
+            {/* <Col lg={3} sm={6}>
               <StatsCard
                 bigIcon={<i className="pe-7s-graph1 text-danger" />}
                 statsText="Errors"
@@ -86,20 +128,20 @@ class Dashboard extends Component {
                 statsIcon={<i className="fa fa-refresh" />}
                 statsIconText="Updated now"
               />
-            </Col>
+            </Col> */}
           </Row>
           <Row>
-            <Col md={8}>
+            <Col md={12}>
               <Card
                 statsIcon="fa fa-history"
                 id="chartHours"
-                title="Users Behavior"
-                category="24 Hours performance"
-                stats="Updated 3 minutes ago"
+                title="Revenue"
+                category="Top revenue in 10 days"
+                // stats="Updated 3 minutes ago"
                 content={
                   <div className="ct-chart">
                     <ChartistGraph
-                      data={dataSales}
+                      data={dataRevenue.series.length>0?dataRevenue:dataSales}
                       type="Line"
                       options={optionsSales}
                       responsiveOptions={responsiveSales}
@@ -111,7 +153,7 @@ class Dashboard extends Component {
                 }
               />
             </Col>
-            <Col md={4}>
+            {/* <Col md={4}>
               <Card
                 statsIcon="fa fa-clock-o"
                 title="Email Statistics"
@@ -129,16 +171,16 @@ class Dashboard extends Component {
                   <div className="legend">{this.createLegend(legendPie)}</div>
                 }
               />
-            </Col>
+            </Col> */}
           </Row>
 
           <Row>
-            <Col md={6}>
+            <Col md={12}>
               <Card
                 id="chartActivity"
-                title="2014 Sales"
-                category="All products including Taxes"
-                stats="Data information certified"
+                title="2019 Revenue"
+                category="Total revenue in 2019"
+                // stats="Data information certified"
                 statsIcon="fa fa-check"
                 content={
                   <div className="ct-chart">
@@ -156,7 +198,8 @@ class Dashboard extends Component {
               />
             </Col>
 
-            <Col md={6}>
+
+            {/* <Col md={6}>
               <Card
                 title="Tasks"
                 category="Backend development"
@@ -170,12 +213,28 @@ class Dashboard extends Component {
                   </div>
                 }
               />
-            </Col>
+            </Col> */}
           </Row>
         </Grid>
       </div>
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    contractState: state.contractState
+  };
+};
 
-export default Dashboard;
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchAllContractsAction: () => dispatch(fetchAllContracts())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Dashboard));
+
+
