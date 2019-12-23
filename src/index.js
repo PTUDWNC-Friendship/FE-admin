@@ -36,6 +36,7 @@ import Login from "layouts/Login.jsx";
 import Logout from "layouts/Logout.jsx";
 import NotFound from "layouts/NotFound.jsx";
 import Home from "layouts/Home";
+import AdminProfile from "views/Users/AdminProfile.jsx"
 
 const loggerMiddleware = createLogger();
 

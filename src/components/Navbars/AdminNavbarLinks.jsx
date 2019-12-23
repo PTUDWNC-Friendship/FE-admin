@@ -59,7 +59,7 @@ class AdminNavbarLinks extends Component {
           </NavItem>
         </Nav>
         <Nav pullRight>
-          <NavItem eventKey={1} href="#">
+          <NavItem eventKey={1} href="/admin/profile">
             Account
           </NavItem>
           <NavDropdown

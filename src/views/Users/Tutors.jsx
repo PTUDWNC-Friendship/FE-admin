@@ -54,7 +54,7 @@ class TutorList extends Component {
     const tutors = this.props.userState.allTutors;
     // const { user } = this.props.userState;
     const thArray = [
-        "_id","username","firstName","lastName","gender","address","phone","type","role","bio","imageURL","status",""
+        "_id","username","firstName","lastName","type","role","status"
     ];
     return (
       <div className="content">
@@ -80,7 +80,11 @@ class TutorList extends Component {
                         return (
                           <tr key={key}>
                             {thArray.map((prop, key) => {
-                              return <td key={key}>{tutor[prop]}</td>;
+                              if (prop === 'name')
+                              {
+                                return <td key={key} style={{wordWrap: 'break-word'}}>{`${tutor.firstName} ${tutor.lastName}`}</td>;
+                              }
+                              return <td key={key} style={{wordWrap: 'break-word'}}>{tutor[prop]}</td>;
                             })}
                             <td>
                             {tutor.status==='Inactive'?

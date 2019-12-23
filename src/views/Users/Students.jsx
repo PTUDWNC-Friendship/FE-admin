@@ -54,8 +54,11 @@ onChangeSatus(value) {
   render() {
     const students = this.props.userState.allStudents;
     // const { user } = this.props.userState;
+    // const thArray = [
+    //     "_id","username","firstName","lastName","gender","address","phone","type","role","bio","imageURL","status"
+    // ];
     const thArray = [
-        "_id","username","firstName","lastName","gender","address","phone","type","role","bio","imageURL","status"
+        "_id","username","name","type","role","status"
     ];
 
     return (
@@ -82,7 +85,11 @@ onChangeSatus(value) {
                         return (
                           <tr key={key}>
                             {thArray.map((prop, key) => {
-                              return <td key={key}>{student[prop]}</td>;
+                              if (prop === 'name')
+                              {
+                                return <td key={key} style={{wordWrap: 'break-word'}}>{`${student.firstName} ${student.lastName}`}</td>;
+                              }
+                              return <td key={key} style={{wordWrap: 'break-word'}}>{student[prop]}</td>;
                             })}
 
                              <td>
@@ -115,15 +122,14 @@ const mapStateToProps = state => {
       userState: state.userState
     };
   };
-  
+
   const mapDispatchToProps = dispatch => {
     return {
       fetAllStudentsAction: () => dispatch(fetchAllStudents())
     };
   };
-  
+
   export default connect(
     mapStateToProps,
     mapDispatchToProps
   )(withRouter(StudentList));
-  
