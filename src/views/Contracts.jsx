@@ -5,35 +5,70 @@ import { withRouter } from "react-router-dom";
 
 import Card from "components/Card/Card.jsx";
 import VisibilityIcon from '@material-ui/icons/Visibility';
+import { Rate } from 'antd';
 import Fab from '@material-ui/core/Fab';
 import { fetchAllContracts } from "../actions/contract";
 import $ from 'jquery';
+import { SERVER_URL } from "helpers/constant";
 
 class ContractList extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      detailContract: null,
+      feedback: null,
+      isFetching: false
+    };
+
+    this.onDetailContract = this.onDetailContract.bind(this);
+    this.onDetailFeedback = this.onDetailFeedback.bind(this);
+  }
+
   componentDidMount() {
     this.props.fetchAllContractsAction();
   }
 
   onDetailContract(contract) {
-    console.log(contract);
+    this.setState({
+      detailContract:  { ...contract }
+    });
+
     $("#idDetail").text(contract._id);
     $("#studentDetail").text(`${contract.student.firstName} ${contract.student.lastName}`);
     $("#tutorDetail").text(`${contract.tutor.firstName} ${contract.tutor.lastName}`);
     $("#subjectDetail").text(contract.subject.name);
-
     $("#startDateDetail").text(contract.startDate);
     $("#endDateDetail").text(contract.endDate);
     $("#createdDateDetail").text(contract.createdDate);
     $("#hoursNumberDetail").text(contract.hoursNumber);
     $("#totalPriceDetail").text(contract.totalPrice);
     $("#revenueDetail").text(contract.revenue);
-    $("#statusDetail").text(contract.message);
-    $("#messageDetail").text(contract.status);
+    $("#statusDetail").text(contract.status);
+    $("#messageDetail").text(contract.message);
 
+  }
+
+  onDetailFeedback(_idFeedback) {
+    this.setState({
+      isFetching: true
+    })
+
+    fetch(`${SERVER_URL}/feedback/api/${_idFeedback}`)
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+        this.setState({
+          feedback: {...json},
+          isFetching: false
+        })
+      })
+      .catch(error => console.log(error));
   }
 
   render() {
     const contracts = this.props.contractState.allContracts;
+    const { feedback } = this.state;
     const thArray = [
         "_id", "student", "tutor", "subject", "feedback", "duration", "createdDate", "hoursNumber", "totalPrice", "revenue", "message", "status"
     ];
@@ -65,7 +100,12 @@ class ContractList extends Component {
                             <td>{`${contract.tutor.firstName} ${contract.tutor.lastName}`}</td>
                             <td>{contract.subject.name}</td>
                             <td>
-                              <button className="btn btn-warning">
+                              <button 
+                                className="btn btn-warning"
+                                aria-label="add"
+                                data-toggle="modal"
+                                data-target="#modalFeedback"
+                                onClick={() => this.onDetailFeedback(contract._idFeedback)}>
                                 Feedback
                               </button>
                             </td>
@@ -82,7 +122,7 @@ class ContractList extends Component {
                                 color="secondary"
                                 aria-label="add"
                                 data-toggle="modal"
-                                data-target="#myModalContract"
+                                data-target="#modalContract"
                                 onClick={() => this.onDetailContract(contract)}
                               >
                                 <VisibilityIcon />
@@ -100,7 +140,7 @@ class ContractList extends Component {
           </Row>
         </Grid>
 
-        <div id="myModalContract" className="modal fade" role="dialog">
+        <div id="modalContract" className="modal fade" role="dialog">
           <div className="modal-dialog modal-dialog-centered ">
             <div className="modal-content">
               <div className="modal-header">
@@ -115,52 +155,52 @@ class ContractList extends Component {
                 </button>
               </div>
               <div className="modal-body">
-                <div className="container">
-                  <div className="row">
+                <div>
+                  <div className="d-flex">
                     <div className="col-4"><h4>ID</h4></div>
                     <div className="col-8" id="idDetail"></div>
                   </div>
-                  <div className="row">
+                  <div className="d-flex">
                     <div className="col-4"><h4>Student</h4></div>
                     <div className="col-8" id="studentDetail"></div>
                   </div>
-                  <div className="row">
+                  <div className="d-flex">
                     <div className="col-4"><h4>Tutor</h4></div>
                     <div className="col-8" id="tutorDetail"></div>
                   </div>
-                  <div className="row">
+                  <div className="d-flex">
                     <div className="col-4"><h4>Subject</h4></div>
                     <div className="col-8" id="subjectDetail"></div>
                   </div>
-                  <div className="row">
+                  <div className="d-flex">
                     <div className="col-4"><h4>Created Date</h4></div>
                     <div className="col-8" id="createdDateDetail"></div>
                   </div>
-                  <div className="row">
+                  <div className="d-flex">
                     <div className="col-4"><h4>Start Date</h4></div>
                     <div className="col-8" id="startDateDetail"></div>
                   </div>
-                  <div className="row">
+                  <div className="d-flex">
                     <div className="col-4"><h4>End Date</h4></div>
                     <div className="col-8" id="endDateDetail"></div>
                   </div>
-                  <div className="row">
+                  <div className="d-flex">
                     <div className="col-4"><h4>Hours</h4></div>
                     <div className="col-8" id="hoursNumberDetail"></div>
                   </div>
-                  <div className="row">
+                  <div className="d-flex">
                     <div className="col-4"><h4>Total Price</h4></div>
                     <div className="col-8" id="totalPriceDetail"></div>
                   </div>
-                  <div className="row">
+                  <div className="d-flex">
                     <div className="col-4"><h4>Revenue</h4></div>
                     <div className="col-8" id="revenueDetail"></div>
                   </div>
-                  <div className="row">
+                  <div className="d-flex">
                     <div className="col-4"><h4>Status</h4></div>
                     <div className="col-8" id="statusDetail"></div>
                   </div>
-                  <div className="row">
+                  <div className="d-flex">
                     <div className="col-4"><h4>Message</h4></div>
                     <div className="col-8" id="messageDetail"></div>
                   </div>
@@ -169,19 +209,53 @@ class ContractList extends Component {
               <div className="modal-footer">
                 <input
                   type="button"
-                  className="btn btn-warning"
-                  data-dismiss="modal"
-                  value="Cancel"
+                  className="btn btn-danger"
+                  value="Approve"
+                  disabled={this.state.detailContract ? this.state.detailContract.status !== 'disputed' : false}
                 />
                 <input
                   type="button"
                   className="btn btn-primary"
+                  data-dismiss="modal"
                   value="OK"
                 />
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="modalFeeback" className="modal fade" role="dialog">
+          <div className="modal-dialog modal-dialog-centered ">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h4 className="modal-title">Detail Contract</h4>
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-hidden="true"
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="modal-body">
+                <div>
+                  <div className="d-flex">
+                    <div className="col-4"><h4>ID</h4></div>
+                    <div className="col-8">{feedback ? feedback._id : null}</div>
+                  </div>
+                  <Rate disabled defaultValue={feedback ? feedback.rate : null} />
+                  <div className="form-group">
+                    <textarea className="form-control" value={feedback ? feedback.comment : null} required />
+                  </div>
+                </div>
+              </div>
+              <div className="modal-footer">
                 <input
                   type="button"
-                  className="btn btn-danger"
-                  value="Dispute"
+                  className="btn btn-primary"
+                  data-dismiss="modal"
+                  value="OK"
                 />
               </div>
             </div>
