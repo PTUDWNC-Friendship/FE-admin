@@ -2,6 +2,7 @@
 import Dashboard from "views/Dashboard.jsx";
 import User from "views/Users/User";
 import SubjectList from "views/Subjects";
+import Feedbacks from "views/Feedbacks";
 // import UserProfile from "views/UserProfile.jsx";
 // import TableList from "views/TableList.jsx";
 import Typography from "views/Typography.jsx";
@@ -51,7 +52,7 @@ const dashboardRoutes = [
     path: "/feedback",
     name: "Feedback (DEVELOPMENT)",
     icon: "pe-7s-smile",
-    component: null,
+    component: Feedbacks,
     layout: "/admin"
   },
   //==============================================
