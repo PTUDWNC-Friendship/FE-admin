@@ -1,11 +1,14 @@
 import React, { Component } from "react";
-import { Grid, Row, Col, Table } from "react-bootstrap";
+import { Grid, Row, Col, Table, Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-
+import TextField from '@material-ui/core/TextField';
 import Card from "components/Card/Card.jsx";
 import VisibilityIcon from '@material-ui/icons/Visibility';
-import { Rate } from 'antd';
+import ReportProblemIcon from '@material-ui/icons/ReportProblem';
+import Rating from '@material-ui/lab/Rating';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import Fab from '@material-ui/core/Fab';
 import { fetchAllContracts } from "../actions/contract";
 import $ from 'jquery';
@@ -66,6 +69,47 @@ class ContractList extends Component {
       .catch(error => console.log(error));
   }
 
+  onHandleDisputed(contract){
+    this.setState({
+      detailContract:  { ...contract }
+    });
+
+    $('#reportMsgContract').val(contract.message);
+    $('#idContract').val(contract._id);
+  }
+  Approve() {
+
+    let contract = {
+      ...this.state.detailContract
+    }
+    delete contract.student;
+    delete contract.tutor;
+    delete contract.subject;
+    delete contract.feedback;
+   contract.status = 'canceled';
+
+    fetch(`${SERVER_URL}/contract/update`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+          ...contract
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(response => response.json())
+      .then(json => {
+
+        this.setState({
+          isFetching: false
+        })
+        this.props.fetchAllContractsAction();
+        $('#closeModalReport').click();
+      })
+      .catch(error => console.log(error));
+
+  }
   render() {
     const contracts = this.props.contractState.allContracts;
     const { feedback } = this.state;
@@ -104,7 +148,7 @@ class ContractList extends Component {
                                 className="btn btn-warning"
                                 aria-label="add"
                                 data-toggle="modal"
-                                data-target="#modalFeedback"
+                                data-target="#modalFeebackx"
                                 onClick={() => this.onDetailFeedback(contract._idFeedback)}>
                                 Feedback
                               </button>
@@ -128,7 +172,18 @@ class ContractList extends Component {
                                 <VisibilityIcon />
                               </Fab>
                             </td>
-                            <td></td>
+                            <td>
+                            {contract.status==='disputed'?
+                            <Fab
+                                style={{backgroundColor: '#e3c922'}}
+                                aria-label="add"
+                                data-toggle="modal"
+                                data-target="#myModalDisputed"
+                                onClick={() => this.onHandleDisputed(contract)}
+                              >
+                                <ReportProblemIcon />
+                              </Fab>:null}
+                            </td>
                           </tr>
                         );
                       })}
@@ -224,11 +279,11 @@ class ContractList extends Component {
           </div>
         </div>
         
-        <div id="modalFeeback" className="modal fade" role="dialog">
+        <div id="modalFeebackx" className="modal fade" role="dialog">
           <div className="modal-dialog modal-dialog-centered ">
             <div className="modal-content">
               <div className="modal-header">
-                <h4 className="modal-title">Detail Contract</h4>
+                <h4 className="modal-title">Feedback</h4>
                 <button
                   type="button"
                   className="close"
@@ -238,14 +293,27 @@ class ContractList extends Component {
                   &times;
                 </button>
               </div>
-              <div className="modal-body">
+              <div style={{marginTop: '50px;'}} >
                 <div>
                   <div className="d-flex">
-                    <div className="col-4"><h4>ID</h4></div>
-                    <div className="col-8">{feedback ? feedback._id : null}</div>
+                    <div className="col-md-4"><label>ID</label></div>
+                    <div className="col-md-8">{feedback ? feedback._id : null}</div>
                   </div>
-                  <Rate disabled defaultValue={feedback ? feedback.rate : null} />
-                  <div className="form-group">
+                  <div className="d-felx" style={{marginTop: '20px;'}}>
+                  <div className="col-md-12">
+                 <Box component="fieldset"  >
+                        <Typography defaultValue="Rating" component="legend">Rating </Typography>
+                            <Rating
+                                id="ratingContract"
+                                name="simple-controlled"
+                                value={this.state.feedback!==null?this.state.feedback.rate:0}
+                                max={10}
+                            />
+                </Box>
+                 </div>
+                  </div>
+                  
+                  <div className="form-group col-md-12" style={{marginTop: '20px;'}}>
                     <textarea className="form-control" value={feedback ? feedback.comment : null} required />
                   </div>
                 </div>
@@ -261,6 +329,43 @@ class ContractList extends Component {
             </div>
           </div>
         </div>
+
+
+                 {/* Modal Disputed */}
+                 <div id="myModalDisputed" className="modal fade" role="dialog">
+        <div className="modal-dialog modal-dialog-centered ">
+
+         
+            <div className="modal-content">
+            <div className="modal-header">
+                            <h4 className="modal-title">Cancel contract</h4>
+            </div>
+            <div className="modal-body ">
+                <input style={{display: 'none'}} id="idContract"></input>
+                <div className="d-flex justify-content-center">
+                    <TextField
+                    style={{width: '100%'}}
+                    id="reportMsgContract"
+                    label="Reason"
+                    multiline
+                    rows="4"
+                    variant="filled"
+                    />
+                </div>
+            </div>
+            <div className="modal-footer d-flex justify-content-center">
+
+                    <Button onClick={()=>this.Approve()} style={{width: '60%'}} className="btn btn-primary" color="secondary">
+                        Approve
+                    </Button>
+
+                <button id="closeModalReport" style={{display: 'none'}} type="button" className="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+            </div>
+
+        </div>
+        </div>
+
       </div>
     );
   }
