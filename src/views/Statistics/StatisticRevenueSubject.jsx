@@ -47,7 +47,7 @@ class StatisticRevenueSubject extends Component {
   calculateRevenue(allContracts, startDate, endDate) {
     var filterDataList = allContracts.filter(element => {
         return element.createdDate >= startDate && element.createdDate <= endDate
-        && (element.status === 'confirmed' || element.status === 'success');
+        && (element.status === 'confirmed' || element.status === 'finished');
     })
     
     for (let i = 0; i < filterDataList.length; i++) {
