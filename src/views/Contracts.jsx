@@ -13,6 +13,8 @@ import Fab from '@material-ui/core/Fab';
 import { fetchAllContracts } from "../actions/contract";
 import $ from 'jquery';
 import { SERVER_URL } from "helpers/constant";
+import 'antd/dist/antd.css';
+import { Pagination } from 'antd';
 
 class ContractList extends Component {
   constructor(props) {
@@ -21,9 +23,18 @@ class ContractList extends Component {
     this.state = {
       detailContract: null,
       feedback: null,
-      isFetching: false
+      isFetching: false,
+
+      search: '',
+      indexFirst: 0,
+      indexLast: 0,
+      currentPage: 1,
+      dataPerPage: 3,
+      totalPage: 1,
+      contracts: []
     };
 
+    this.choosePage = this.choosePage.bind(this);
     this.onDetailContract = this.onDetailContract.bind(this);
     this.onDetailFeedback = this.onDetailFeedback.bind(this);
   }
@@ -32,6 +43,57 @@ class ContractList extends Component {
     this.props.fetchAllContractsAction();
   }
 
+  componentDidUpdate(oldProps) {
+    // Pagination
+    if ( oldProps.contractState.allContracts !== this.props.contractState.allContracts ) {
+      const { search, dataPerPage} = this.state;
+      this.setState({
+        totalPage: Math.ceil(this.props.contractState.allContracts.length / this.state.dataPerPage),
+        contracts: this.props.contractState.allContracts
+          .filter(element => {
+            if (!search) {
+              return true;
+            }
+            return true;
+            // return (
+            //   element.category.toLowerCase().search(search.toLowerCase()) !==
+            //     -1 ||
+            //   element.name.toLowerCase().search(search.toLowerCase()) !== -1
+            // );
+          })
+          .slice(0, dataPerPage)
+      });
+    }
+  }
+
+choosePage(page) {
+    const { search } = this.state;
+    console.log("hello");
+    // eslint-disable-next-line react/no-did-update-set-state
+    this.setState(prevState => {
+      const indexFirst = (page - 1) * prevState.dataPerPage;
+      const indexLast = page * prevState.dataPerPage;
+      return {
+        indexFirst,
+        indexLast,
+        currentPage: page,
+        contracts: this.props.contractState.allContracts
+          .filter(element => {
+            if (!search) {
+              return true;
+            }
+            return true;
+            // return (
+            //   element.category.toLowerCase().search(search.toLowerCase()) !==
+            //     -1 ||
+            //   element.name.toLowerCase().search(search.toLowerCase()) !== -1
+            // );
+          })
+          .slice(indexFirst, indexLast)
+      };
+    });
+  }
+  
   onDetailContract(contract) {
     this.setState({
       detailContract:  { ...contract }
@@ -111,8 +173,7 @@ class ContractList extends Component {
 
   }
   render() {
-    const contracts = this.props.contractState.allContracts;
-    const { feedback } = this.state;
+    const { contracts, currentPage, totalPage,feedback } = this.state;
     const thArray = [
         "_id", "student", "tutor", "subject", "feedback", "duration", "createdDate", "hoursNumber", "totalPrice", "revenue", "message", "status"
     ];
@@ -192,6 +253,9 @@ class ContractList extends Component {
                 }
               />
             </Col>
+          </Row>
+          <Row>
+            <Pagination onChange={this.choosePage} defaultCurrent={1} defaultPageSize={1} current={currentPage} total={totalPage} />
           </Row>
         </Grid>
 
