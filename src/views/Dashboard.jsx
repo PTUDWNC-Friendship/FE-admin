@@ -63,13 +63,13 @@ class Dashboard extends Component {
 }
 setValueMonth(e) {
   this.setState({
-    month: e.target.value
+    month:  parseInt(e.target.value,10)
   })
 }
 
 setValueYearOfMonth(e) {
   this.setState({
-    yearOfMonth: e.target.value
+    yearOfMonth: parseInt(e.target.value,10)
   })
 }
 
