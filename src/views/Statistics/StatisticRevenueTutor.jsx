@@ -46,7 +46,8 @@ class StatisticRevenueTutor extends Component {
 
   calculateRevenue(allContracts, startDate, endDate) {
     var filterDataList = allContracts.filter(element => {
-        return element.createdDate >= startDate && element.createdDate <= endDate;
+        return element.createdDate >= startDate && element.createdDate <= endDate
+        && (element.status === 'confirmed' || element.status === 'success');
     })
     
     for (let i = 0; i < filterDataList.length; i++) {
