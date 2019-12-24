@@ -97,7 +97,8 @@ setValueYearOfMonth(e) {
     let labelsRevenue = [];
     let seriesRevenue = [];
 
-    let labelsMonth = [];
+
+
     let seriesYear = [];
 
     let labelsRevenueMonth = [];
@@ -121,24 +122,55 @@ setValueYearOfMonth(e) {
       for(let i=0;i<arrayTopRevenue.length-1;i++) {
         let isSimilarDate = true;
         const date1 = new Date(arrayTopRevenue[i].createdDate);
+        const endDate = new Date(arrayTopRevenue[i+1].createdDate);
+        const dateFormat = date1.getUTCDate() + '-' + (date1.getMonth()+1) + '-' +date1.getFullYear();
+        const endDateFormat = endDate.getUTCDate() + '-' + (endDate.getMonth()+1) + '-' +endDate.getFullYear();
+        console.log(endDateFormat);
         const date2 = new Date(this.state.date);
+        const date3 = new Date(arrayTopRevenue[i+1].createdDate);
 
         const month = new Date(arrayTopRevenue[i].createdDate).getMonth()+1;
         const year =  new Date(arrayTopRevenue[i].createdDate).getFullYear();
         if(arrayTopRevenue[i].status==='confirmed') {
-          if(date2.getDate()==date1.getDate()&&date2.getMonth()==date1.getMonth()&&date1.getFullYear()==date2.getFullYear()) {
+          if(date2.getUTCDate()==date1.getUTCDate()&&date2.getMonth()==date1.getMonth()&&date1.getFullYear()==date2.getFullYear()) {
               //labelsRevenue.push(arrayTopRevenue[i+1].createdDate);
               seriesRevenue.push(arrayTopRevenue[i].revenue)
           }
 
           if(month===this.state.month&&year === this.state.yearOfMonth) {
-            seriesRevenueMonth.push(arrayTopRevenue[i].revenue);
+            if(date3.getUTCDate()==date1.getUTCDate()&&date3.getMonth()==date1.getMonth()&&date1.getFullYear()==date3.getFullYear()) {
+              totalDay +=arrayTopRevenue[i].revenue;
+            } else {
+              isSimilarDate = false;
+              totalDay += arrayTopRevenue[i].revenue;
+              
+            }
+
+            if(isSimilarDate==false) {
+              labelsRevenueMonth.push(dateFormat);
+              seriesRevenueMonth.push(arrayTopRevenue[i].revenue);
+              totalDay = 0;
+            }
+
+            if(i==arrayTopRevenue.length-2&&isSimilarDate==true&&arrayTopRevenue[i+1].status==='confirmed') {
+              totalDay+=arrayTopRevenue[i+1].revenue;
+              totalRevenue+=arrayTopRevenue[i+1].revenue;
+              labelsRevenueMonth.push(endDateFormat);
+              seriesRevenueMonth.push(totalDay);
+            } 
+            if (i==arrayTopRevenue.length-2&&isSimilarDate==false&&arrayTopRevenue[i+1].status==='confirmed'){
+              totalDay+=arrayTopRevenue[i+1].revenue;
+              totalRevenue+=arrayTopRevenue[i+1].revenue;
+              labelsRevenueMonth.push(endDateFormat);
+              seriesRevenueMonth.push(totalDay);
           }
+        }
 
           totalRevenue+=arrayTopRevenue[i].revenue;  
         }
       }
 
+      dataRevenueMonth.labels = labelsRevenueMonth;
       dataRevenueMonth.series.push(seriesRevenueMonth);
       //
       dataRevenue.labels = labelsRevenue;
