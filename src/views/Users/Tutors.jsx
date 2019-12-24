@@ -201,7 +201,6 @@ class TutorList extends Component {
 
   choosePage(page) {
     const { search } = this.state;
-    console.log("hello");
     // eslint-disable-next-line react/no-did-update-set-state
     this.setState(prevState => {
       const indexFirst = (page - 1) * prevState.dataPerPage;
