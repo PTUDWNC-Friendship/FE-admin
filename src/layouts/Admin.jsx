@@ -161,7 +161,7 @@ class Admin extends Component {
       const { history } = this.props;
       history.push("/login");
     }
-
+    
     if (
       window.innerWidth < 993 &&
       e.history.location.pathname !== e.location.pathname &&
@@ -176,15 +176,8 @@ class Admin extends Component {
     }
   }
   render() {
-    console.log(this.props);
-    const invisibleRoute = [];
-    for (let i = 0; i < routes.length; i+=1)
-    {
-      if (routes[i].path !== '/contract')
-      {
-        invisibleRoute.push(routes[i]);
-      }
-    }
+
+
     return (
       <div className="wrapper">
         <NotificationSystem ref="notificationSystem" style={style} />
