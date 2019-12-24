@@ -81,18 +81,48 @@ class Dashboard extends Component {
     if(allContracts.length>0) {
       let count = 0;
       let totalDay = 0;
-      // Note
-      for(let i=0;i<allContracts.length;i++) {
-        if(allContracts[i].status==='confirmed') {
-          if(count<10) {
-            count+=1;
-            labelsRevenue.push(allContracts[i].createdDate);
-            seriesRevenue.push(allContracts[i].revenue);
-          }
-          
-          totalRevenue+=allContracts[i].revenue;
-        }
 
+      // Note
+      const arrayTopRevenue = allContracts;
+      arrayTopRevenue.sort((function(a,b){
+        return new Date(b.createdDate ) - new Date(a.createdDate);
+      }))
+      for(let i=0;i<arrayTopRevenue.length-1;i++) {
+        let isSimilarDate = true;
+        const date1 = new Date(arrayTopRevenue[i].createdDate);
+        const date2 = new Date(arrayTopRevenue[i+1].createdDate);
+        if(arrayTopRevenue[i].status==='confirmed') {
+          if(date2.getDate()==date1.getDate()&&date2.getMonth()==date1.getMonth()&&date1.getFullYear()==date2.getFullYear()) {
+            if(count<10) {
+              count+=1;
+              totalDay +=arrayTopRevenue[i].revenue;
+            }
+          }
+          else {
+            isSimilarDate = false;
+            totalDay += arrayTopRevenue[i].revenue;
+          }
+          console.log(totalDay);
+          if(isSimilarDate==false) {
+            labelsRevenue.push(arrayTopRevenue[i].createdDate);
+            seriesRevenue.push(totalDay);
+            totalDay = 0;
+          }
+  
+          if(i==arrayTopRevenue.length-2&&isSimilarDate==true) {
+            totalDay+=arrayTopRevenue[i+1].revenue;
+            totalRevenue+=arrayTopRevenue[i+1].revenue;
+            labelsRevenue.push(arrayTopRevenue[i+1].createdDate);
+            seriesRevenue.push(totalDay);
+          } 
+          if (i==arrayTopRevenue.length-2&&isSimilarDate==false){
+            totalDay+=arrayTopRevenue[i+1].revenue;
+            totalRevenue+=arrayTopRevenue[i+1].revenue;
+            labelsRevenue.push(arrayTopRevenue[i+1].createdDate);
+            seriesRevenue.push(totalDay);
+          }
+          totalRevenue+=arrayTopRevenue[i].revenue;  
+        }
       }
       
       dataRevenue.labels = labelsRevenue;
