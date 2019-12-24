@@ -27,13 +27,10 @@ class User extends Component {
       <div className="content">
         <Grid fluid>
           <Row>
-            <Col md={12}>
               <StudentList />
-            </Col>
-
-            <Col md={12}>
+          </Row>
+          <Row>
               <TutorList />
-            </Col>
           </Row>
         </Grid>
       </div>
