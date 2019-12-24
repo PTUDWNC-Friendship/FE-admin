@@ -49,7 +49,7 @@ class StatisticRevenueSubject extends Component {
         return element.createdDate >= startDate && element.createdDate <= endDate;
     })
     
-    for (let i = 0; i < filterDataList.length - 1; i++) {
+    for (let i = 0; i < filterDataList.length; i++) {
         filterDataList[i]['totalRevenue'] = filterDataList[i].totalPrice - filterDataList[i].revenue;
     }
 

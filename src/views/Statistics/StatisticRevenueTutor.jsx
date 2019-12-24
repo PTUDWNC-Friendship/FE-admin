@@ -12,7 +12,7 @@ class StatisticRevenueTutor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        startDate: new Date(),
+        startDate: new Date().toString(),
         endDate: new Date(),
         tutors: []
     }
@@ -49,7 +49,7 @@ class StatisticRevenueTutor extends Component {
         return element.createdDate >= startDate && element.createdDate <= endDate;
     })
     
-    for (let i = 0; i < filterDataList.length - 1; i++) {
+    for (let i = 0; i < filterDataList.length; i++) {
         filterDataList[i]['totalRevenue'] = filterDataList[i].totalPrice - filterDataList[i].revenue;
     }
 
