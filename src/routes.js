@@ -11,6 +11,7 @@ import Maps from "views/Maps.jsx";
 import Notifications from "views/Notifications.jsx";
 // import Upgrade from "views/Upgrade.jsx";
 import Contracts from "views/Contracts";
+import Statistics from 'views/Statistics/Statistics';
 
 const dashboardRoutes = [
   {
@@ -18,6 +19,14 @@ const dashboardRoutes = [
     name: "Dashboard",
     icon: "pe-7s-graph",
     component: Dashboard,
+    layout: "/admin",
+    sidebar: true
+  },
+  {
+    path: "/statistic",
+    name: "Top Revenue",
+    icon: "pe-7s-graph",
+    component: Statistics,
     layout: "/admin",
     sidebar: true
   },
