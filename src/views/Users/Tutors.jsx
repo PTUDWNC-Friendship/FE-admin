@@ -8,6 +8,8 @@ import BlockIcon from '@material-ui/icons/Block';
 import Card from "components/Card/Card.jsx";
 import { fetchAllTutors } from "../../actions/user";
 import {SERVER_URL} from '../../helpers/constant';
+import 'antd/dist/antd.css';
+import { Pagination } from 'antd';
 
 class TutorList extends Component {
 
@@ -15,12 +17,44 @@ class TutorList extends Component {
     super(props);
 
     this.state = {
-      selectedTutor: null
+      selectedTutor: null,
+      search: '',
+      indexFirst: 0,
+      indexLast: 0,
+      currentPage: 1,
+      dataPerPage: 3,
+      totalPage: 1,
+      tutors: []
     };
+
+    this.choosePage = this.choosePage.bind(this);
   }
 
   componentDidMount() {
     this.props.fetchAllTutorsAction();
+  }
+
+  componentDidUpdate(oldProps) {
+    // Pagination
+    if ( oldProps.userState.allTutors !== this.props.userState.allTutors ) {
+      const { search, dataPerPage} = this.state;
+      this.setState({
+        totalPage: Math.ceil(this.props.userState.allTutors.length / this.state.dataPerPage),
+        tutors: this.props.userState.allTutors
+          .filter(element => {
+            if (!search) {
+              return true;
+            }
+            return true;
+            // return (
+            //   element.category.toLowerCase().search(search.toLowerCase()) !==
+            //     -1 ||
+            //   element.name.toLowerCase().search(search.toLowerCase()) !== -1
+            // );
+          })
+          .slice(0, dataPerPage)
+      });
+    }
   }
 
   onChangeSatus(value) {
@@ -165,16 +199,43 @@ class TutorList extends Component {
     return null;
   }
 
+  choosePage(page) {
+    const { search } = this.state;
+    console.log("hello");
+    // eslint-disable-next-line react/no-did-update-set-state
+    this.setState(prevState => {
+      const indexFirst = (page - 1) * prevState.dataPerPage;
+      const indexLast = page * prevState.dataPerPage;
+      return {
+        indexFirst,
+        indexLast,
+        currentPage: page,
+        tutors: this.props.userState.allTutors
+          .filter(element => {
+            if (!search) {
+              return true;
+            }
+            return true;
+            // return (
+            //   element.category.toLowerCase().search(search.toLowerCase()) !==
+            //     -1 ||
+            //   element.name.toLowerCase().search(search.toLowerCase()) !== -1
+            // );
+          })
+          .slice(indexFirst, indexLast)
+      };
+    });
+  }
+
   render() {
-    const tutors = this.props.userState.allTutors;
-    // const { user } = this.props.userState;
     const thArray = [
         "_id","username","firstName","lastName","type","role","status"
     ];
+    const { tutors, currentPage, totalPage } = this.state;
+
     return (
       <div className="content">
-
-      {this.showContentModal()}
+        {this.showContentModal()}
 
         <Grid fluid>
           <Row>
@@ -198,37 +259,58 @@ class TutorList extends Component {
                         return (
                           <tr key={key}>
                             {thArray.map((prop, key) => {
-                              if (prop === 'name')
-                              {
-                                return <td key={key} style={{wordWrap: 'break-word'}}>{`${tutor.firstName} ${tutor.lastName}`}</td>;
+                              if (prop === "name") {
+                                return (
+                                  <td
+                                    key={key}
+                                    style={{ wordWrap: "break-word" }}
+                                  >{`${tutor.firstName} ${tutor.lastName}`}</td>
+                                );
                               }
-                              return <td key={key} style={{wordWrap: 'break-word'}}>{tutor[prop]}</td>;
+                              return (
+                                <td
+                                  key={key}
+                                  style={{ wordWrap: "break-word" }}
+                                >
+                                  {tutor[prop]}
+                                </td>
+                              );
                             })}
                             <td>
-                            {tutor.status==='Inactive'?
-                            <Fab title="Unlock user" onClick={()=>this.onChangeSatus(tutor)}  style={{backgroundColor: '#87CB16'}}  aria-label="like" >
-                              <LockOpenIcon />
-                            </Fab> :
-                            <Fab title="Lock user" onClick={()=>this.onChangeSatus(tutor)} style={{backgroundColor: '#FF4A55'}}   aria-label="like" >
-                              <BlockIcon />
-                          </Fab>
-                            }
+                              {tutor.status === "Inactive" ? (
+                                <Fab
+                                  title="Unlock user"
+                                  onClick={() => this.onChangeSatus(tutor)}
+                                  style={{ backgroundColor: "#87CB16" }}
+                                  aria-label="like"
+                                >
+                                  <LockOpenIcon />
+                                </Fab>
+                              ) : (
+                                <Fab
+                                  title="Lock user"
+                                  onClick={() => this.onChangeSatus(tutor)}
+                                  style={{ backgroundColor: "#FF4A55" }}
+                                  aria-label="like"
+                                >
+                                  <BlockIcon />
+                                </Fab>
+                              )}
                             </td>
 
-                            <td className='text-center align-items-center'>
+                            <td className="text-center align-items-center">
                               <a
-                               href="#detailSpecialtyModal"
-                              className="detail"
-                              data-toggle="modal"
-                              onClick={() => this.handleSelectElement(tutor)}
-                            >
-                              <i
-                                className="pe-7s-look"
-                                data-toggle="tooltip"
-                                title="Detail"
+                                href="#detailSpecialtyModal"
+                                className="detail"
+                                data-toggle="modal"
+                                onClick={() => this.handleSelectElement(tutor)}
                               >
-                              </i>
-                            </a>
+                                <i
+                                  className="pe-7s-look"
+                                  data-toggle="tooltip"
+                                  title="Detail"
+                                ></i>
+                              </a>
                             </td>
                           </tr>
                         );
@@ -239,8 +321,10 @@ class TutorList extends Component {
               />
             </Col>
           </Row>
+          <Row>
+            <Pagination onChange={this.choosePage} defaultCurrent={1} defaultPageSize={1} current={currentPage} total={totalPage} />
+          </Row>
         </Grid>
-
       </div>
     );
   }
