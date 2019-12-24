@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ChartistGraph from "react-chartist";
-import { Grid, Row, Col } from "react-bootstrap";
+import { Grid, Row, Col, Label } from "react-bootstrap";
 import TextField from '@material-ui/core/TextField';
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
@@ -27,7 +27,10 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       dataRevenueIn10Day: null,
-      year: (new Date()).getFullYear()
+      year: (new Date()).getFullYear(),
+      date: (new Date()).getFullYear()+'-'+((new Date()).getMonth()+1)+'-'+(new Date()).getDate(),
+      month: (new Date()).getMonth()+1,
+      yearOfMonth: new Date().getFullYear()
     }
   }
 
@@ -53,6 +56,23 @@ class Dashboard extends Component {
       })
   }
 
+  setValueDate(e) {
+    this.setState({
+      date: e.target.value
+    })
+}
+setValueMonth(e) {
+  this.setState({
+    month: e.target.value
+  })
+}
+
+setValueYearOfMonth(e) {
+  this.setState({
+    yearOfMonth: e.target.value
+  })
+}
+
   render() {
     var dataRevenue = {
       labels: null,
@@ -60,22 +80,33 @@ class Dashboard extends Component {
     
       ]
     }
+    var dataRevenueYear = {
+      labels: null,
+      series: [
+    
+      ]
+    }
+
     var dataRevenueMonth = {
       labels: null,
       series: [
     
       ]
     }
+
     let labelsRevenue = [];
     let seriesRevenue = [];
 
     let labelsMonth = [];
-    let seriesMoth = [];
+    let seriesYear = [];
+
+    let labelsRevenueMonth = [];
+    let seriesRevenueMonth = [];
 
     let totalRevenue = 0;
 
 
-    dataRevenueMonth.labels = dataBar.labels;
+    dataRevenueYear.labels = dataBar.labels;
     const {allContracts} = this.props.contractState;
     let revenueContracts = allContracts;
     if(allContracts.length>0) {
@@ -90,45 +121,27 @@ class Dashboard extends Component {
       for(let i=0;i<arrayTopRevenue.length-1;i++) {
         let isSimilarDate = true;
         const date1 = new Date(arrayTopRevenue[i].createdDate);
-        const date2 = new Date(arrayTopRevenue[i+1].createdDate);
+        const date2 = new Date(this.state.date);
+
+        const month = new Date(arrayTopRevenue[i].createdDate).getMonth()+1;
+        const year =  new Date(arrayTopRevenue[i].createdDate).getFullYear();
         if(arrayTopRevenue[i].status==='confirmed') {
           if(date2.getDate()==date1.getDate()&&date2.getMonth()==date1.getMonth()&&date1.getFullYear()==date2.getFullYear()) {
-            if(count<10) {
-              count+=1;
-              totalDay +=arrayTopRevenue[i].revenue;
-            }
+              //labelsRevenue.push(arrayTopRevenue[i+1].createdDate);
+              seriesRevenue.push(arrayTopRevenue[i].revenue)
           }
-          else {
-            isSimilarDate = false;
-            totalDay += arrayTopRevenue[i].revenue;
+
+          if(month===this.state.month&&year === this.state.yearOfMonth) {
+            seriesRevenueMonth.push(arrayTopRevenue[i].revenue);
           }
-          console.log(totalDay);
-          if(isSimilarDate==false) {
-            labelsRevenue.push(arrayTopRevenue[i].createdDate);
-            seriesRevenue.push(totalDay);
-            totalDay = 0;
-          }
-  
-          if(i==arrayTopRevenue.length-2&&isSimilarDate==true) {
-            totalDay+=arrayTopRevenue[i+1].revenue;
-            totalRevenue+=arrayTopRevenue[i+1].revenue;
-            labelsRevenue.push(arrayTopRevenue[i+1].createdDate);
-            seriesRevenue.push(totalDay);
-          } 
-          if (i==arrayTopRevenue.length-2&&isSimilarDate==false){
-            totalDay+=arrayTopRevenue[i+1].revenue;
-            totalRevenue+=arrayTopRevenue[i+1].revenue;
-            labelsRevenue.push(arrayTopRevenue[i+1].createdDate);
-            seriesRevenue.push(totalDay);
-          }
+
           totalRevenue+=arrayTopRevenue[i].revenue;  
         }
       }
 
+      dataRevenueMonth.series.push(seriesRevenueMonth);
+      //
       dataRevenue.labels = labelsRevenue;
-      labelsRevenue.sort((function(a,b){
-        return new Date(a) -new Date(b);
-      }))
       dataRevenue.series.push(seriesRevenue)
 
       for(var i = 0;i<12;i+=1) {
@@ -143,10 +156,10 @@ class Dashboard extends Component {
               }
               
           }
-          seriesMoth.push(totalRevenueMonth);
+          seriesYear.push(totalRevenueMonth);
         }
 
-        dataRevenueMonth.series.push(seriesMoth);
+        dataRevenueYear.series.push(seriesYear);
       }
     
   
@@ -193,17 +206,48 @@ class Dashboard extends Component {
             </Col> */}
           </Row>
           <Row>
-            <Col md={12}>
+            <Col md={6}>
+            <Col md={12} style={{display: 'flex', justifyContent: 'center'}}>
+              <TextField type="date" value={this.state.date} onChange={(e)=>this.setValueDate(e)} id="standard-basic"  />
+            </Col>
               <Card
                 statsIcon="fa fa-history"
                 id="chartHours"
                 title="Revenue"
-                category="Top revenue in 10 days"
+                category="Revenue in date"
                 // stats="Updated 3 minutes ago"
                 content={
                   <div className="ct-chart">
                     <ChartistGraph
                       data={dataRevenue.series.length>0?dataRevenue:dataSales}
+                      type="Line"
+                      options={optionsSales}
+                      responsiveOptions={responsiveSales}
+                    />
+                  </div>
+                }
+                legend={
+                  <div className="legend">{this.createLegend(legendSales)}</div>
+                }
+              />
+            </Col>
+
+            <Col md={6}>
+            <Col md={12} style={{display: 'flex', justifyContent: 'center'}}>
+              
+              <TextField type="number" value={this.state.month} onChange={(e)=>this.setValueMonth(e)} id="standard-basic"  label="Month"  />
+              <TextField style={{marginLeft: '30px'}} type="number" value={this.state.yearOfMonth} onChange={(e)=>this.setValueYearOfMonth(e)} id="standard-basic"  label="Year"  />
+            </Col>
+              <Card
+                statsIcon="fa fa-history"
+                id="chartHours"
+                title="Revenue"
+                category="Revenue in month"
+                // stats="Updated 3 minutes ago"
+                content={
+                  <div className="ct-chart">
+                    <ChartistGraph
+                      data={dataRevenueMonth.series.length>0?dataRevenueMonth:dataSales}
                       type="Line"
                       options={optionsSales}
                       responsiveOptions={responsiveSales}
@@ -250,7 +294,7 @@ class Dashboard extends Component {
                 content={
                   <div className="ct-chart">
                     <ChartistGraph
-                      data={dataRevenueMonth}
+                      data={dataRevenueYear}
                       type="Bar"
                       options={optionsBar}
                       responsiveOptions={responsiveBar}
