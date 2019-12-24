@@ -124,8 +124,11 @@ class Dashboard extends Component {
           totalRevenue+=arrayTopRevenue[i].revenue;  
         }
       }
-      
+
       dataRevenue.labels = labelsRevenue;
+      labelsRevenue.sort((function(a,b){
+        return new Date(a) -new Date(b);
+      }))
       dataRevenue.series.push(seriesRevenue)
 
       for(var i = 0;i<12;i+=1) {
