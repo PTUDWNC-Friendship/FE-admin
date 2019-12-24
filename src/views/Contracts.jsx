@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Grid, Row, Col, Table, Button } from "react-bootstrap";
 import { connect } from "react-redux";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import TextField from '@material-ui/core/TextField';
 import Card from "components/Card/Card.jsx";
 import VisibilityIcon from '@material-ui/icons/Visibility';
@@ -183,7 +183,6 @@ class ContractList extends Component {
                               >
                                 <ReportProblemIcon />
                               </Fab>:null}
-                              <Link to="/admin/maps" >test</Link>
                             </td>
                           </tr>
                         );
