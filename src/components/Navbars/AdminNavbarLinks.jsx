@@ -16,7 +16,7 @@
 
 */
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 // import { FiLogOut } from "react-icons/fi";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -59,8 +59,10 @@ class AdminNavbarLinks extends Component {
           </NavItem>
         </Nav>
         <Nav pullRight>
-          <NavItem eventKey={1} href="/admin/profile">
+          <NavItem eventKey={1}>
+            <Link to="/admin/profile" style={{color: 'grey'}}>
             Account
+            </Link>
           </NavItem>
           <NavDropdown
             eventKey={2}

@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 
 const Home = (props) => {
     return (
-        <Redirect to="/admin" />
+        <Redirect to="/admin/dashboard" />
     );
 }
 

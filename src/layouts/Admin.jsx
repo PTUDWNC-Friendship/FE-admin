@@ -161,7 +161,7 @@ class Admin extends Component {
       const { history } = this.props;
       history.push("/login");
     }
-    
+
     if (
       window.innerWidth < 993 &&
       e.history.location.pathname !== e.location.pathname &&
@@ -190,9 +190,7 @@ class Admin extends Component {
             {...this.props}
             brandText={this.getBrandText(this.props.location.pathname)}
           />
-          {this.props.location.pathname === '/admin' ? (
-            <AdminProfile/>
-          ) : null}
+
 
           <Switch>
             {this.getRoutes(routes)}
