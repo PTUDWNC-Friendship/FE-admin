@@ -18,6 +18,7 @@
 import React, { Component } from "react";
 import ChartistGraph from "react-chartist";
 import { Grid, Row, Col } from "react-bootstrap";
+import TextField from '@material-ui/core/TextField';
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Card } from "components/Card/Card.jsx";
@@ -43,6 +44,7 @@ class Dashboard extends Component {
     super(props);
     this.state = {
       dataRevenueIn10Day: null,
+      year: (new Date()).getFullYear()
     }
   }
 
@@ -61,6 +63,13 @@ class Dashboard extends Component {
     }
     return legend;
   }
+
+  setvalueyear(e) {
+      this.setState({
+        year: e.target.value
+      })
+  }
+
   render() {
     var dataRevenue = {
       labels: null,
@@ -110,7 +119,7 @@ class Dashboard extends Component {
         let totalRevenueMonth = 0;
         for(let j=0;j<allContracts.length;j++) {
 
-            if(allContracts[j].status==='confirmed' && (new Date(allContracts[j].createdDate)).getMonth()===i) {
+            if(allContracts[j].status==='confirmed' && (new Date(allContracts[j].createdDate)).getMonth()===i && (new Date(allContracts[j].createdDate)).getFullYear()==this.state.year) {
 
               console.log((new Date(allContracts[j].createdDate)).getMonth());
               totalRevenueMonth+=allContracts[j].revenue;
@@ -212,7 +221,10 @@ class Dashboard extends Component {
           </Row>
 
           <Row>
-            <Col md={12}>
+            <Col md={12} style={{display: 'flex', justifyContent: 'center'}}>
+            <TextField value={this.state.year} onChange={(e)=>this.setvalueyear(e)} id="standard-basic" label="Year" />
+            </Col>
+            <Col md={12} style={{marginTop: '30px'}}>
               <Card
                 id="chartActivity"
                 title="2019 Revenue"

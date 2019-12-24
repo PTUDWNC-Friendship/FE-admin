@@ -593,7 +593,7 @@ var responsiveBar = [
 ];
 var legendBar = {
   names: ["Revenue"],
-  types: [ "danger"]
+  types: [ "info"]
 };
 
 module.exports = {
