@@ -1,20 +1,4 @@
-/*!
 
-=========================================================
-* Light Bootstrap Dashboard React - v1.3.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/light-bootstrap-dashboard-react
-* Copyright 2019 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/light-bootstrap-dashboard-react/blob/master/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React, { Component } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import NotificationSystem from "react-notification-system";
@@ -31,6 +15,7 @@ import { style } from "variables/Variables.jsx";
 import routes from "routes.js";
 import image from "assets/img/sidebar-3.jpg";
 import { authorizeUser } from '../actions/user';
+import childRoutes from '../routes-child';
 
 class Admin extends Component {
   constructor(props) {
@@ -98,6 +83,23 @@ class Admin extends Component {
     });
   };
 
+  getChildRoutes = routes => {
+    return routes.map((prop, key) => {
+        return (
+          <Route
+            path={`/admin${prop.path}`}
+            render={props => (
+              <prop.component
+                {...props}
+                handleClick={this.handleNotificationClick}
+              />
+            )}
+            key={key}
+          />
+        );
+    });
+  };
+
   getBrandText = path => {
     for (let i = 0; i < routes.length; i++) {
       if (
@@ -106,6 +108,15 @@ class Admin extends Component {
         ) !== -1
       ) {
         return routes[i].name;
+      }
+    }
+    for (let i = 0; i < childRoutes.length; i++) {
+      if (
+        this.props.location.pathname.indexOf(
+          "/admin" + childRoutes[i].path
+        ) !== -1
+      ) {
+        return childRoutes[i].name;
       }
     }
     return "Brand";
@@ -210,7 +221,10 @@ class Admin extends Component {
             <AdminProfile/>
           ) : null}
 
-          <Switch>{this.getRoutes(routes)}</Switch>
+          <Switch>
+            {this.getRoutes(routes)}
+            {this.getChildRoutes(childRoutes)}
+          </Switch>
           <Footer />
           <FixedPlugin
             handleImageClick={this.handleImageClick}
