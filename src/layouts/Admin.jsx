@@ -15,7 +15,6 @@ import { style } from "variables/Variables.jsx";
 import routes from "routes.js";
 import image from "assets/img/sidebar-3.jpg";
 import { authorizeUser } from '../actions/user';
-import childRoutes from '../routes-child';
 
 class Admin extends Component {
   constructor(props) {
@@ -83,23 +82,6 @@ class Admin extends Component {
     });
   };
 
-  getChildRoutes = routes => {
-    return routes.map((prop, key) => {
-        return (
-          <Route
-            path={`/admin${prop.path}`}
-            render={props => (
-              <prop.component
-                {...props}
-                handleClick={this.handleNotificationClick}
-              />
-            )}
-            key={key}
-          />
-        );
-    });
-  };
-
   getBrandText = path => {
     for (let i = 0; i < routes.length; i++) {
       if (
@@ -108,15 +90,6 @@ class Admin extends Component {
         ) !== -1
       ) {
         return routes[i].name;
-      }
-    }
-    for (let i = 0; i < childRoutes.length; i++) {
-      if (
-        this.props.location.pathname.indexOf(
-          "/admin" + childRoutes[i].path
-        ) !== -1
-      ) {
-        return childRoutes[i].name;
       }
     }
     return "Brand";
@@ -230,7 +203,6 @@ class Admin extends Component {
 
           <Switch>
             {this.getRoutes(routes)}
-            {this.getChildRoutes(childRoutes)}
           </Switch>
           <Footer />
           <FixedPlugin

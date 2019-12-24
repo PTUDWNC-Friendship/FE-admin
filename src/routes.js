@@ -18,28 +18,32 @@ const dashboardRoutes = [
     name: "Dashboard",
     icon: "pe-7s-graph",
     component: Dashboard,
-    layout: "/admin"
+    layout: "/admin",
+    sidebar: true
   },
   {
     path: "/user",
     name: "User",
     icon: "pe-7s-users",
     component: User,
-    layout: "/admin"
+    layout: "/admin",
+    sidebar: true
   },
   {
     path: "/subject",
     name: "Subject",
     icon: "pe-7s-study",
     component: SubjectList,
-    layout: "/admin"
+    layout: "/admin",
+    sidebar: true
   },
   {
     path: "/contract",
     name: "Contract",
     icon: "pe-7s-note2",
     component: Contracts,
-    layout: "/admin"
+    layout: "/admin",
+    sidebar: true
   },
   // {
   //   path: "/tag",
@@ -53,7 +57,8 @@ const dashboardRoutes = [
     name: "Feedback (DEVELOPMENT)",
     icon: "pe-7s-smile",
     component: Feedbacks,
-    layout: "/admin"
+    layout: "/admin",
+    sidebar: true
   },
   //==============================================
   {
@@ -61,28 +66,32 @@ const dashboardRoutes = [
     name: "Typography",
     icon: "pe-7s-news-paper",
     component: Typography,
-    layout: "/admin"
+    layout: "/admin",
+    sidebar: true
   },
   {
     path: "/icons",
     name: "Icons",
     icon: "pe-7s-science",
     component: Icons,
-    layout: "/admin"
+    layout: "/admin",
+    sidebar: true
   },
   {
     path: "/maps",
     name: "Maps",
     icon: "pe-7s-map-marker",
     component: Maps,
-    layout: "/admin"
+    layout: "/admin",
+    sidebar: false
   },
   {
     path: "/notifications",
     name: "Notifications",
     icon: "pe-7s-bell",
     component: Notifications,
-    layout: "/admin"
+    layout: "/admin",
+    sidebar: true
   }
   // {
   //   upgrade: true,
@@ -90,7 +99,8 @@ const dashboardRoutes = [
   //   name: "Upgrade to PRO",
   //   icon: "pe-7s-rocket",
   //   component: Upgrade,
-  //   layout: "/admin"
+  //   layout: "/admin",
+  //  sidebar: true
   // }
 ];
 
