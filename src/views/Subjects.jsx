@@ -11,10 +11,77 @@ import $ from 'jquery';
 import Card from "components/Card/Card.jsx";
 import { fetchAllSubjects } from "../actions/subject";
 import {SERVER_URL} from '../helpers/constant'
+import 'antd/dist/antd.css';
+import { Pagination } from 'antd';
 
 class SubjectList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      search: '',
+      indexFirst: 0,
+      indexLast: 0,
+      currentPage: 1,
+      dataPerPage: 10,
+      totalPage: 1,
+      subjects: []
+    };
+    this.choosePage = this.choosePage.bind(this);
+
+  }
   componentDidMount() {
     this.props.fetchAllSubjectsAction();
+  }
+
+  componentDidUpdate(oldProps) {
+    // Pagination
+    if ( oldProps.subjectState.allSubjects !== this.props.subjectState.allSubjects ) {
+      const { search, dataPerPage} = this.state;
+      this.setState({
+        totalPage: Math.ceil(this.props.subjectState.allSubjects.length / this.state.dataPerPage),
+        subjects: this.props.subjectState.allSubjects
+          .filter(element => {
+            if (!search) {
+              return true;
+            }
+            return true;
+            // return (
+            //   element.category.toLowerCase().search(search.toLowerCase()) !==
+            //     -1 ||
+            //   element.name.toLowerCase().search(search.toLowerCase()) !== -1
+            // );
+          })
+          .slice(0, dataPerPage)
+      });
+    }
+  }
+
+  choosePage(page) {
+    const { search } = this.state;
+    console.log("hello");
+    // eslint-disable-next-line react/no-did-update-set-state
+    this.setState(prevState => {
+      const indexFirst = (page - 1) * prevState.dataPerPage;
+      const indexLast = page * prevState.dataPerPage;
+      return {
+        indexFirst,
+        indexLast,
+        currentPage: page,
+        subjects: this.props.subjectState.allSubjects
+          .filter(element => {
+            if (!search) {
+              return true;
+            }
+            return true;
+            // return (
+            //   element.category.toLowerCase().search(search.toLowerCase()) !==
+            //     -1 ||
+            //   element.name.toLowerCase().search(search.toLowerCase()) !== -1
+            // );
+          })
+          .slice(indexFirst, indexLast)
+      };
+    });
   }
 
   onInsertTutorSubject = e => {
@@ -100,7 +167,7 @@ class SubjectList extends Component {
   }
 
   render() {
-    const subjects = this.props.subjectState.allSubjects;
+    const { subjects, currentPage, totalPage } = this.state;
     const thArray = [
         "_id", "name", "category", "description", "Detail", "Remove"
     ];
@@ -153,6 +220,9 @@ class SubjectList extends Component {
                 }
               />
             </Col>
+          </Row>
+          <Row>
+            <Pagination onChange={this.choosePage} defaultCurrent={1} defaultPageSize={1} current={currentPage} total={totalPage} />
           </Row>
         </Grid>
 
