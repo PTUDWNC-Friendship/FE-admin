@@ -21,7 +21,7 @@ class StudentList extends Component {
       indexFirst: 0,
       indexLast: 0,
       currentPage: 1,
-      dataPerPage: 3,
+      dataPerPage: 5,
       totalPage: 1,
       students: []
     };
