@@ -68,12 +68,28 @@ class Dashboard extends Component {
     
       ]
     }
+    var dataRevenueMonth = {
+      labels: null,
+      series: [
+    
+      ]
+    }
     let labelsRevenue = [];
     let seriesRevenue = [];
+
+    let labelsMonth = [];
+    let seriesMoth = [];
+
     let totalRevenue = 0;
+
+
+    dataRevenueMonth.labels = dataBar.labels;
     const {allContracts} = this.props.contractState;
+    let revenueContracts = allContracts;
     if(allContracts.length>0) {
       let count = 0;
+      let totalDay = 0;
+      // Note
       for(let i=0;i<allContracts.length;i++) {
         if(allContracts[i].status==='confirmed') {
           if(count<10) {
@@ -81,14 +97,35 @@ class Dashboard extends Component {
             labelsRevenue.push(allContracts[i].createdDate);
             seriesRevenue.push(allContracts[i].revenue);
           }
+          
           totalRevenue+=allContracts[i].revenue;
         }
 
       }
+      
       dataRevenue.labels = labelsRevenue;
       dataRevenue.series.push(seriesRevenue)
-    }
-    console.log(dataRevenue);
+
+      for(var i = 0;i<12;i+=1) {
+        let totalRevenueMonth = 0;
+        for(let j=0;j<allContracts.length;j++) {
+
+            if(allContracts[j].status==='confirmed' && (new Date(allContracts[j].createdDate)).getMonth()===i) {
+
+              console.log((new Date(allContracts[j].createdDate)).getMonth());
+              totalRevenueMonth+=allContracts[j].revenue;
+
+              }
+              
+          }
+          seriesMoth.push(totalRevenueMonth);
+        }
+
+        dataRevenueMonth.series.push(seriesMoth);
+      }
+    
+  
+
     return (
       <div className="content">
         <Grid fluid>
@@ -185,7 +222,7 @@ class Dashboard extends Component {
                 content={
                   <div className="ct-chart">
                     <ChartistGraph
-                      data={dataBar}
+                      data={dataRevenueMonth}
                       type="Bar"
                       options={optionsBar}
                       responsiveOptions={responsiveBar}
