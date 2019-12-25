@@ -68,7 +68,6 @@ class ContractList extends Component {
 
 choosePage(page) {
     const { search } = this.state;
-    console.log("hello");
     // eslint-disable-next-line react/no-did-update-set-state
     this.setState(prevState => {
       const indexFirst = (page - 1) * prevState.dataPerPage;
@@ -175,7 +174,7 @@ choosePage(page) {
   render() {
     const { contracts, currentPage, totalPage,feedback } = this.state;
     const thArray = [
-        "_id", "student", "tutor", "subject", "feedback", "duration", "createdDate", "hoursNumber", "totalPrice", "revenue", "message", "status"
+       "student", "tutor", "subject", "feedback", "duration", "hoursNumber", "totalPrice", "revenue", "status"
     ];
     return (
       <div className="content">
@@ -200,7 +199,6 @@ choosePage(page) {
                       {contracts.map((contract, key) => {
                         return (
                           <tr key={key}>
-                            <td>{contract._id}</td>
                             <td>{`${contract.student.firstName} ${contract.student.lastName}`}</td>
                             <td>{`${contract.tutor.firstName} ${contract.tutor.lastName}`}</td>
                             <td>{contract.subject.name}</td>
@@ -216,11 +214,9 @@ choosePage(page) {
                             </td>
                             <td>{`${contract.startDate}
                                   ${contract.endDate}`}</td>
-                            <td>{contract.createdDate}</td>
                             <td>{contract.hoursNumber}</td>
                             <td>{contract.totalPrice}</td>
                             <td>{contract.revenue}</td>
-                            <td>{contract.message}</td>
                             <td>{contract.status}</td>
                             <td>
                               <Fab

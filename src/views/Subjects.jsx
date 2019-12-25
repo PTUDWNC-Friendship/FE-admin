@@ -176,7 +176,7 @@ class SubjectList extends Component {
         <Grid fluid>
           <Row>
             <Col md={12}>
-              <div style={{display: 'flex', justifyContent: 'center'}}>
+              <div style={{display: 'flex', justifyContent: 'center', float: 'right'}}>
               <Fab color="primary" aria-label="add" data-toggle="modal" data-target="#myModalSubject" >
                 <AddIcon />
               </Fab>
