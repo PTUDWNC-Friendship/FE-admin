@@ -148,7 +148,7 @@ setValueYearOfMonth(e) {
 
             if(isSimilarDate==false) {
               labelsRevenueMonth.push(dateFormat);
-              seriesRevenueMonth.push(arrayTopRevenue[i].revenue);
+              seriesRevenueMonth.push(totalDay);
               totalDay = 0;
             }
 
