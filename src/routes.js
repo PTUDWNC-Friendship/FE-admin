@@ -63,45 +63,45 @@ const dashboardRoutes = [
   // },
   {
     path: "/feedback",
-    name: "Feedback (DEVELOPMENT)",
+    name: "Feedback",
     icon: "pe-7s-smile",
     component: Feedbacks,
     layout: "/admin",
     sidebar: true
   },
   //==============================================
-  {
-    path: "/typography",
-    name: "Typography",
-    icon: "pe-7s-news-paper",
-    component: Typography,
-    layout: "/admin",
-    sidebar: true
-  },
-  {
-    path: "/icons",
-    name: "Icons",
-    icon: "pe-7s-science",
-    component: Icons,
-    layout: "/admin",
-    sidebar: true
-  },
-  {
-    path: "/maps",
-    name: "Maps",
-    icon: "pe-7s-map-marker",
-    component: Maps,
-    layout: "/admin",
-    sidebar: false
-  },
-  {
-    path: "/notifications",
-    name: "Notifications",
-    icon: "pe-7s-bell",
-    component: Notifications,
-    layout: "/admin",
-    sidebar: true
-  }
+  // {
+  //   path: "/typography",
+  //   name: "Typography",
+  //   icon: "pe-7s-news-paper",
+  //   component: Typography,
+  //   layout: "/admin",
+  //   sidebar: true
+  // },
+  // {
+  //   path: "/icons",
+  //   name: "Icons",
+  //   icon: "pe-7s-science",
+  //   component: Icons,
+  //   layout: "/admin",
+  //   sidebar: true
+  // },
+  // {
+  //   path: "/maps",
+  //   name: "Maps",
+  //   icon: "pe-7s-map-marker",
+  //   component: Maps,
+  //   layout: "/admin",
+  //   sidebar: false
+  // },
+  // {
+  //   path: "/notifications",
+  //   name: "Notifications",
+  //   icon: "pe-7s-bell",
+  //   component: Notifications,
+  //   layout: "/admin",
+  //   sidebar: true
+  // }
   // {
   //   upgrade: true,
   //   path: "/upgrade",
