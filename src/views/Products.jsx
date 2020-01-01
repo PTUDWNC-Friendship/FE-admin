@@ -9,168 +9,156 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import $ from 'jquery';
 import Card from "components/Card/Card.jsx";
-import { fetchAllSubjects } from "../actions/subject";
+import { fetchAllproducts } from "../actions/subject";
 import {SERVER_URL} from '../helpers/constant'
 import 'antd/dist/antd.css';
 import { Pagination } from 'antd';
 
-class SubjectList extends Component {
+class ProductList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       search: '',
-      indexFirst: 0,
-      indexLast: 0,
-      currentPage: 1,
-      dataPerPage: 10,
-      totalPage: 1,
-      subjects: []
+      products: [],
+      categories: [],
+      isFetching: false
     };
-    this.choosePage = this.choosePage.bind(this);
 
   }
   componentDidMount() {
-    this.props.fetchAllSubjectsAction();
-  }
 
-  componentDidUpdate(oldProps) {
-    // Pagination
-    if ( oldProps.subjectState.allSubjects !== this.props.subjectState.allSubjects ) {
-      const { search, dataPerPage} = this.state;
+    if (!this.state.isFetching)
+    {
       this.setState({
-        totalPage: Math.ceil(this.props.subjectState.allSubjects.length / this.state.dataPerPage),
-        subjects: this.props.subjectState.allSubjects
-          .filter(element => {
-            if (!search) {
-              return true;
-            }
-            return true;
-            // return (
-            //   element.category.toLowerCase().search(search.toLowerCase()) !==
-            //     -1 ||
-            //   element.name.toLowerCase().search(search.toLowerCase()) !== -1
-            // );
-          })
-          .slice(0, dataPerPage)
+        isFetching: true
       });
+      this.fetchAllProducts();
     }
   }
 
-  choosePage(page) {
-    const { search } = this.state;
-    console.log("hello");
-    // eslint-disable-next-line react/no-did-update-set-state
-    this.setState(prevState => {
-      const indexFirst = (page - 1) * prevState.dataPerPage;
-      const indexLast = page * prevState.dataPerPage;
-      return {
-        indexFirst,
-        indexLast,
-        currentPage: page,
-        subjects: this.props.subjectState.allSubjects
-          .filter(element => {
-            if (!search) {
-              return true;
-            }
-            return true;
-            // return (
-            //   element.category.toLowerCase().search(search.toLowerCase()) !==
-            //     -1 ||
-            //   element.name.toLowerCase().search(search.toLowerCase()) !== -1
-            // );
-          })
-          .slice(indexFirst, indexLast)
-      };
-    });
+  componentWillMount() {
+
+    if (!this.state.isFetching)
+    {
+      this.setState({
+        isFetching: true
+      });
+      this.fetchAllProducts();
+    }
   }
 
-  onInsertTutorSubject = e => {
-    e.preventDefault();
+  componentWillUpdate(oldProps) {
+    if (!this.state.isFetching)
+    {
+      this.setState({
+        isFetching: true
+      });
+      this.fetchAllProducts();
+    }
+  }
 
-    fetch(`${SERVER_URL}/subject/insert`, {
-      method: 'POST',
-      body: JSON.stringify({
-        name:  e.target.subjectName.value,
-        category: e.target.subjectCategory.value,
-        description: e.target.subjectDesc.value
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8'
-      }
-    })
-      .then(response => response.json() )
+  fetchAllProducts(){
+    fetch(`${SERVER_URL}/getAllProducts`)
+      .then(response => response.json())
       .then(data => {
-        swal("Sucessfully!", "Add subject successful!", "success").then(()=>{
-          this.props.fetchAllSubjectsAction();
-      });
+        this.setState({
+          products: data.info.data
+        });
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
-
       });
-
   }
+
+  // onInsertTutorSubject = e => {
+  //   e.preventDefault();
+  //
+  //   fetch(`${SERVER_URL}/subject/insert`, {
+  //     method: 'POST',
+  //     body: JSON.stringify({
+  //       name:  e.target.subjectName.value,
+  //       category: e.target.subjectCategory.value,
+  //       description: e.target.subjectDesc.value
+  //     }),
+  //     headers: {
+  //       'Content-type': 'application/json; charset=UTF-8'
+  //     }
+  //   })
+  //     .then(response => response.json() )
+  //     .then(data => {
+  //       swal("Sucessfully!", "Add subject successful!", "success").then(()=>{
+  //         this.props.fetchAllproductsAction();
+  //     });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //
+  //     });
+  //
+  // }
 
   onDetailSubject(value) {
-    $('#subjectCategory').val(value.category);
-    $('#subjectName').val(value.name);
-    $('#subjectDescripID').val(value.description);
-    $('#idSubject').val(value._id);
-  }
-
-  onSubmitDetailSubject() {
-    fetch(`${SERVER_URL}/subject/update`, {
-      method: 'POST',
-      body: JSON.stringify({
-        _id: $('#idSubject').val(),
-        name:  $('#subjectName').val(),
-        category:   $('#subjectCategory').val(),
-        description:  $('#subjectDescripID').val()
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8'
-      }
-    })
-      .then(response => response.json() )
-      .then(data => {
-        swal("Sucessfully!", "Edit subject successful!", "success").then(()=>{
-          this.props.fetchAllSubjectsAction();
-      });
-      })
-      .catch((error) => {
-        console.log(error);
-
-      });
-  }
-
-  onDeleteSubject(value) {
     console.log(value);
-    fetch(`${SERVER_URL}/subject/delete`, {
-      method: 'DELETE',
-      body: JSON.stringify({
-        _id: value._id
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8'
-      }
-    })
-      .then(response => response.json() )
-      .then(data => {
-        swal("Sucessfully!", "Delete subject successful!", "success").then(()=>{
-          this.props.fetchAllSubjectsAction();
-      });
-      })
-      .catch((error) => {
-        console.log(error);
-
-      });
+    $('#subjectCategory').val(value.categoryName);
+    $('#subjectName').val(value.name);
+    $('#subjectDescripID').val(value.price);
+    $('#idSubject').val(value.id);
   }
+
+  // onSubmitDetailSubject() {
+  //   fetch(`${SERVER_URL}/subject/update`, {
+  //     method: 'POST',
+  //     body: JSON.stringify({
+  //       _id: $('#idSubject').val(),
+  //       name:  $('#subjectName').val(),
+  //       category:   $('#subjectCategory').val(),
+  //       description:  $('#subjectDescripID').val()
+  //     }),
+  //     headers: {
+  //       'Content-type': 'application/json; charset=UTF-8'
+  //     }
+  //   })
+  //     .then(response => response.json() )
+  //     .then(data => {
+  //       swal("Sucessfully!", "Edit subject successful!", "success").then(()=>{
+  //         this.props.fetchAllproductsAction();
+  //     });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //
+  //     });
+  // }
+
+  // onDeleteSubject(value) {
+  //   console.log(value);
+  //   fetch(`${SERVER_URL}/subject/delete`, {
+  //     method: 'DELETE',
+  //     body: JSON.stringify({
+  //       _id: value._id
+  //     }),
+  //     headers: {
+  //       'Content-type': 'application/json; charset=UTF-8'
+  //     }
+  //   })
+  //     .then(response => response.json() )
+  //     .then(data => {
+  //       swal("Sucessfully!", "Delete subject successful!", "success").then(()=>{
+  //         this.props.fetchAllproductsAction();
+  //     });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //
+  //     });
+  // }
 
   render() {
-    const { subjects, currentPage, totalPage } = this.state;
+    const { products } = this.state;
     const thArray = [
-        "_id", "name", "category", "description", "Detail", "Remove"
+        "id", "name", "categoryName", "description", "price"
     ];
+
     return (
       <div className="content">
         <Grid fluid>
@@ -182,7 +170,7 @@ class SubjectList extends Component {
               </Fab>
               </div>
               <Card
-                title="Subjects"
+                title="products"
                 category="Description"
                 ctTableFullWidth
                 ctTableResponsive
@@ -196,39 +184,36 @@ class SubjectList extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {subjects.map((subject, key) => {
-                        return (
-                          <tr key={key}>
-                            {thArray.map((prop, key) => {
-                              return <td key={key}>{subject[prop]}</td>;
-                            })}
-                                                        <td>
-                            <Fab style={{backgroundColor: '#e3c922'}} onClick={()=>this.onDetailSubject(subject)} aria-label="detail" data-toggle="modal" data-target="#myModalDetail" >
-                              <EditIcon />
-                            </Fab>
-                            </td>
-                            <td>
-                            <Fab color="danger" onClick={()=>this.onDeleteSubject(subject)} style={{backgroundColor: '#FF4A55'}} aria-label="delete">
-                              <DeleteIcon />
-                            </Fab>
-                            </td>
-                          </tr>
-                        );
-                      })}
+                      {this.state.products.map((product, key) => {
+                      return (
+                        <tr key={key}>
+                          {thArray.map((prop, key) => {
+                            return <td key={key}>{product[prop]}</td>;
+                          })}
+                                                      <td>
+                          <Fab style={{backgroundColor: '#e3c922'}} onClick={()=> this.onDetailSubject(product)}  aria-label="detail" data-toggle="modal" data-target="#myModalDetail" >
+                            <EditIcon />
+                          </Fab>
+                          </td>
+                          <td>
+                          <Fab color="danger"  style={{backgroundColor: '#FF4A55'}} aria-label="delete">
+                            <DeleteIcon />
+                          </Fab>
+                          </td>
+                        </tr>
+                      );
+                    })}
                     </tbody>
                   </Table>
                 }
               />
             </Col>
           </Row>
-          <Row>
-            <Pagination onChange={this.choosePage} defaultCurrent={1} defaultPageSize={1} current={currentPage} total={totalPage} />
-          </Row>
         </Grid>
 
         <div class="modal fade" id="myModalSubject" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
-        
+
 
           <div class="modal-content">
           <form onSubmit={this.onInsertTutorSubject}>
@@ -267,18 +252,18 @@ class SubjectList extends Component {
               </div>
             </form>
       </div>
-      
+
 
     </div>
   </div>
-  
+
   <div id="myModalDetail" className="modal fade" role="dialog">
         <div className="modal-dialog modal-dialog-centered ">
 
-         
+
             <div className="modal-content">
             <div className="modal-header">
-                <h4 className="modal-title">Detail Specialty</h4>
+                <h4 className="modal-title">Detail Product</h4>
                 <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               </div>
               <div className="modal-body">
@@ -321,19 +306,5 @@ class SubjectList extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    subjectState: state.subjectState
-  };
-};
 
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchAllSubjectsAction: () => dispatch(fetchAllSubjects())
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(SubjectList));
+export default ProductList;
