@@ -22,7 +22,7 @@ const dashboardRoutes = [
   },
   {
     path: "/products",
-    name: "Subject",
+    name: "Products",
     icon: "pe-7s-study",
     component: ProductList,
     layout: "/admin",

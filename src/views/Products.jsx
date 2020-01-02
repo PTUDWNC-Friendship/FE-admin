@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Grid, Row, Col, Table } from "react-bootstrap";
+import { Grid, Row, Col, Table, Image } from "react-bootstrap";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import swal from 'sweetalert';
@@ -18,7 +18,6 @@ class ProductList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: '',
       products: [],
       categories: [],
       isFetching: false
@@ -33,6 +32,7 @@ class ProductList extends Component {
         isFetching: true
       });
       this.fetchAllProducts();
+      this.fetchAllCategories();
     }
   }
 
@@ -44,6 +44,7 @@ class ProductList extends Component {
         isFetching: true
       });
       this.fetchAllProducts();
+      this.fetchAllCategories();
     }
   }
 
@@ -54,11 +55,17 @@ class ProductList extends Component {
         isFetching: true
       });
       this.fetchAllProducts();
+      this.fetchAllCategories();
     }
   }
 
   fetchAllProducts(){
-    fetch(`${SERVER_URL}/getAllProducts`)
+    fetch(`${SERVER_URL}/getAllProducts`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
       .then(response => response.json())
       .then(data => {
         this.setState({
@@ -70,94 +77,119 @@ class ProductList extends Component {
       });
   }
 
-  // onInsertTutorSubject = e => {
-  //   e.preventDefault();
-  //
-  //   fetch(`${SERVER_URL}/subject/insert`, {
-  //     method: 'POST',
-  //     body: JSON.stringify({
-  //       name:  e.target.subjectName.value,
-  //       category: e.target.subjectCategory.value,
-  //       description: e.target.subjectDesc.value
-  //     }),
-  //     headers: {
-  //       'Content-type': 'application/json; charset=UTF-8'
-  //     }
-  //   })
-  //     .then(response => response.json() )
-  //     .then(data => {
-  //       swal("Sucessfully!", "Add subject successful!", "success").then(()=>{
-  //         this.props.fetchAllproductsAction();
-  //     });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //
-  //     });
-  //
-  // }
-
-  onDetailSubject(value) {
-    console.log(value);
-    $('#subjectCategory').val(value.categoryName);
-    $('#subjectName').val(value.name);
-    $('#subjectDescripID').val(value.price);
-    $('#idSubject').val(value.id);
+  fetchAllCategories(){
+    fetch(`${SERVER_URL}/getCategories`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          categories: data.info.data
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
-  // onSubmitDetailSubject() {
-  //   fetch(`${SERVER_URL}/subject/update`, {
-  //     method: 'POST',
-  //     body: JSON.stringify({
-  //       _id: $('#idSubject').val(),
-  //       name:  $('#subjectName').val(),
-  //       category:   $('#subjectCategory').val(),
-  //       description:  $('#subjectDescripID').val()
-  //     }),
-  //     headers: {
-  //       'Content-type': 'application/json; charset=UTF-8'
-  //     }
-  //   })
-  //     .then(response => response.json() )
-  //     .then(data => {
-  //       swal("Sucessfully!", "Edit subject successful!", "success").then(()=>{
-  //         this.props.fetchAllproductsAction();
-  //     });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //
-  //     });
-  // }
+  onInsertProduct = e => {
+    e.preventDefault();
+    console.log(e.target.subjectName.value);
+    fetch(`${SERVER_URL}/addProducts`, {
+      method: 'POST',
+      body: JSON.stringify({
+        id_category:  e.target.subjectCategory.value,
+        name:  e.target.subjectName.value,
+        imgUrl: e.target.productImg.value,
+        description:  e.target.subjectDescripID.value,
+        price: e.target.productPrice.value
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(response => response.json() )
+      .then(data => {
+        swal("Sucessfully!", "Add subject successful!", "success").then(()=>{
+          this.fetchAllProducts();
+      });
+      })
+      .catch((error) => {
+        console.log(error);
 
-  // onDeleteSubject(value) {
-  //   console.log(value);
-  //   fetch(`${SERVER_URL}/subject/delete`, {
-  //     method: 'DELETE',
-  //     body: JSON.stringify({
-  //       _id: value._id
-  //     }),
-  //     headers: {
-  //       'Content-type': 'application/json; charset=UTF-8'
-  //     }
-  //   })
-  //     .then(response => response.json() )
-  //     .then(data => {
-  //       swal("Sucessfully!", "Delete subject successful!", "success").then(()=>{
-  //         this.props.fetchAllproductsAction();
-  //     });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //
-  //     });
-  // }
+      });
+
+  }
+
+  onDetailSubject(value) {
+
+    $('#subjectCategory').val(value.categoryName);
+    $('#subjectName').val(value.name);
+    $('#productPrice').val(value.price);
+    $('#subjectDescripID').val(value.description);
+    $('#idSubject').val(value.id);
+    $('#productImg').attr("src",value.imgUrl);
+  }
+
+  onSubmitDetailProduct() {
+    fetch(`${SERVER_URL}/products`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        id: $('#idSubject').val(),
+        name:  $('#subjectName').val(),
+        id_category:   $('#subjectCategory').val(),
+        description:  $('#subjectDescripID').val(),
+        price: $('#productPrice').val(),
+        imgUrl: $('#productImg').attr("src")
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(response => response.json() )
+      .then(data => {
+        swal("Sucessfully!", "Edit product successful!", "success").then(()=>{
+          this.fetchAllProducts();
+      });
+      })
+      .catch((error) => {
+        console.log(error);
+
+      });
+  }
+
+  onDeleteProduct(value) {
+    fetch(`${SERVER_URL}/deleteProducts`, {
+      method: 'PUT',
+      body: JSON.stringify({
+        id: value
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8'
+      }
+    })
+      .then(response => response.json() )
+      .then(data => {
+        swal("Sucessfully!", "Delete product successful!", "success").then(()=>{
+          this.fetchAllProducts();
+      });
+      })
+      .catch((error) => {
+        console.log(error);
+
+      });
+  }
 
   render() {
     const { products } = this.state;
     const thArray = [
         "id", "name", "categoryName", "description", "price"
     ];
+
+    console.log(products);
 
     return (
       <div className="content">
@@ -170,13 +202,12 @@ class ProductList extends Component {
               </Fab>
               </div>
               <Card
-                title="products"
-                category="Description"
+                title="List of products"
                 ctTableFullWidth
                 ctTableResponsive
                 content={
                   <Table striped hover>
-                    <thead>
+                    <thead className='text-left'>
                       <tr>
                         {thArray.map((prop, key) => {
                           return <th key={key}>{prop}</th>;
@@ -196,7 +227,7 @@ class ProductList extends Component {
                           </Fab>
                           </td>
                           <td>
-                          <Fab color="danger"  style={{backgroundColor: '#FF4A55'}} aria-label="delete">
+                          <Fab color="danger"  style={{backgroundColor: '#FF4A55'}} onClick={()=> this.onDeleteProduct(product.id)} aria-label="delete">
                             <DeleteIcon />
                           </Fab>
                           </td>
@@ -212,38 +243,35 @@ class ProductList extends Component {
         </Grid>
 
         <div class="modal fade" id="myModalSubject" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-
-
+          <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
-          <form onSubmit={this.onInsertTutorSubject}>
+          <form onSubmit={this.onInsertProduct}>
               <div className="modal-header">
-                <h4 className="modal-title">New Specialty</h4>
+                <h4 className="modal-title">New Product</h4>
                 <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               </div>
               <div className="modal-body">
                 <div className="form-group">
-                  <h>Subject</h>
+                 <h>Image URL</h>
+                   <input type="text" name='productImg' className="form-control" required/>
+                  <h>Product</h>
                     <input type="text" name='subjectName' className="form-control" required/>
-                  </div>
+                  <h>Price ($)</h>
+                    <input type="text" name='productPrice' className="form-control" required/>
+                </div>
                   <div className="form-group">
                     <h>Category</h>
                     <select
                       className="form-control" name='subjectCategory'
                     >
-                    <option value="Math">Math</option>
-                    <option value="Literature">Literature</option>
-                    <option value="Biology">Biology</option>
-                    <option value="Languages">Languages</option>
-                    <option value="Geography">Geography</option>
-                    <option value="Physics">Physics</option>
-                    <option value="Chemistry">Chemistry</option>
-                    <option value="History">History</option>
+                    {this.state.categories.map((category, key) => {
+                      return <option value={category.id}>{category.name}</option>;
+                    })}
                     </select>
                   </div>
                   <div className="form-group">
                     <h>Description</h>
-                    <textarea className="form-control" name='subjectDesc' required />
+                    <textarea className="form-control" name='subjectDescripID' required />
                   </div>
                 </div>
               <div className="modal-footer">
@@ -255,7 +283,7 @@ class ProductList extends Component {
 
 
     </div>
-  </div>
+        </div>
 
   <div id="myModalDetail" className="modal fade" role="dialog">
         <div className="modal-dialog modal-dialog-centered ">
@@ -263,14 +291,22 @@ class ProductList extends Component {
 
             <div className="modal-content">
             <div className="modal-header">
-                <h4 className="modal-title">Detail Product</h4>
+                <h4 className="modal-title">Product detail</h4>
                 <button type="button" className="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               </div>
               <div className="modal-body">
                 <div className="form-group">
-                <input id="idSubject" style={{display: 'none'}} type="text" name='subjectName' className="form-control" required/>
-                  <h>Subject</h>
+                 <input id="idSubject" style={{display: 'none'}} type="text" name='subjectId' className="form-control" required/>
+                  <Image
+                    className="avatar border-gray"
+                    id="productImg"
+                    style={{maxWidth: '30%', maxHieght: '30%'}}
+                  />
+                  <br/>
+                  <h>Name</h>
                     <input id="subjectName" type="text" name='subjectName' className="form-control" required/>
+                  <h>Price ($)</h>
+                    <input id="productPrice" type="text" name='subjectName' className="form-control" required/>
                   </div>
                   <div className="form-group">
                     <h>Category</h>
@@ -278,14 +314,9 @@ class ProductList extends Component {
                       id="subjectCategory"
                       className="form-control" name='subjectCategory'
                     >
-                    <option value="Math">Math</option>
-                    <option value="Literature">Literature</option>
-                    <option value="Biology">Biology</option>
-                    <option value="Languages">Languages</option>
-                    <option value="Geography">Geography</option>
-                    <option value="Physics">Physics</option>
-                    <option value="Chemistry">Chemistry</option>
-                    <option value="History">History</option>
+                    {this.state.categories.map((category, key) => {
+                      return <option value={category.id}>{category.name}</option>;
+                    })}
                     </select>
                   </div>
                   <div className="form-group">
@@ -295,7 +326,7 @@ class ProductList extends Component {
                 </div>
               <div className="modal-footer">
                 <input type="button" className="btn btn-default" data-dismiss="modal" value="Cancel"/>
-                <input type="button" onClick={()=>this.onSubmitDetailSubject()} className="btn btn-success" value="Submit"/>
+                <input type="button" onClick={()=>this.onSubmitDetailProduct()} className="btn btn-success" value="Submit"/>
               </div>
             </div>
 
