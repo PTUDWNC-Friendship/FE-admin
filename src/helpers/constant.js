@@ -1,2 +1,2 @@
- export const SERVER_URL = 'http://localhost:8080';
- // export const SERVER_URL = "https://uberfortutor-server-user.herokuapp.com"
+ // export const SERVER_URL = 'http://localhost:8080';
+ export const SERVER_URL = "https://steamshop.herokuapp.com"

@@ -9,10 +9,7 @@ import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
 import $ from 'jquery';
 import Card from "components/Card/Card.jsx";
-import { fetchAllproducts } from "../actions/subject";
-import {SERVER_URL} from '../helpers/constant'
-import 'antd/dist/antd.css';
-import { Pagination } from 'antd';
+import {SERVER_URL} from '../helpers/constant';
 
 class ProductList extends Component {
   constructor(props) {
@@ -61,7 +58,7 @@ class ProductList extends Component {
 
   fetchAllProducts(){
     fetch(`${SERVER_URL}/getAllProducts`, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8'
       }
@@ -79,7 +76,7 @@ class ProductList extends Component {
 
   fetchAllCategories(){
     fetch(`${SERVER_URL}/getCategories`, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-type': 'application/json; charset=UTF-8'
       }
@@ -189,7 +186,6 @@ class ProductList extends Component {
         "id", "name", "categoryName", "description", "price"
     ];
 
-    console.log(products);
 
     return (
       <div className="content">

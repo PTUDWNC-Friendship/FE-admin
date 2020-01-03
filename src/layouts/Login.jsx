@@ -75,25 +75,6 @@ class Login extends React.Component {
     };
   }
 
-  componentDidMount() {
-    const { userState, history, authorizeUserAction } = this.props;
-    authorizeUserAction();
-    if (userState.user !== null) {
-      if (userState.user.role === "admin") {
-        history.push("/");
-      }
-    }
-  }
-
-  componentDidUpdate() {
-    const { userState, history, authorizeUserAction } = this.props;
-    authorizeUserAction();
-    if (userState.user !== null) {
-      if (userState.user.role === "admin") {
-        history.push("/");
-      }
-    }
-  }
 
   setErrorMessage = message => {
     this.setState({
@@ -106,21 +87,15 @@ class Login extends React.Component {
     e.preventDefault();
     const { loginAction } = this.props;
     Promise.resolve(
-      loginAction(e.target.email.value, e.target.password.value)
+      loginAction(e.target.email.value, e.target.password.value, 2)
     ).then(() => {
       const { userState } = this.props;
       if (userState.isFetching === false) {
-        if (userState.user === null) {
+        if (!userState.isLogin) {
           $("#errorMsg").show();
           this.setErrorMessage("Incorrect username or password!");
         } else {
-          const { history } = this.props;
-          if (userState.user.role === "admin") {
-            history.push("/");
-          } else {
-            $("#errorMsg").show();
-            this.setErrorMessage("Please login by admin account!");
-          }
+          window.location.href = '/admin/dashboard'
         }
       }
       $("#idLoading").hide();
@@ -168,10 +143,6 @@ class Login extends React.Component {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
               <div
                 className="error"
                 id="errorMsg"
@@ -195,15 +166,6 @@ class Login extends React.Component {
               >
                 Sign In
               </Button>
-
-              <Grid container style={{ height: "80px" }}>
-                <Grid item xs>
-                  <Link href="/" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-
-              </Grid>
               <Box mt={5}>
                 <Copyright />
               </Box>
@@ -223,8 +185,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    loginAction: (username, password) => dispatch(login(username, password)),
-    authorizeUserAction: () => dispatch(authorizeUser)
+    loginAction: (email, password, type) => dispatch(login(email, password, type))
   };
 };
 

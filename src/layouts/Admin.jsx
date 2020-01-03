@@ -156,11 +156,6 @@ class Admin extends Component {
 
     const { userState, authorizeUserAction } = this.props;
 
-    // if (userState.user === null) {
-    //   authorizeUserAction();
-    //   const { history } = this.props;
-    //   history.push("/login");
-    // }
 
     if (
       window.innerWidth < 993 &&

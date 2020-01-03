@@ -19,6 +19,8 @@ const userState = (state = initialState, action) => {
       return { ...state, isFetching: false };
     case types.GET_CURRENT_USER:
       return { ...state, isFetching: false, isLogin: true, user: action.user };
+    case types.LOGIN_FAILED:
+      return { ...state, isFetching: false, isLogin: false};
     case types.GET_CURRENT_TUTOR:
       return { ...state, tutor: action.tutor };
     case types.GET_ALL_TUTORS:
